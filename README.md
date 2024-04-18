@@ -36,3 +36,36 @@
 - Social media marketing targeted ads.
 - Influencer marketing partner with event organizers.
 - Content marketing long posts on event planning tips.
+
+
+# Project Home Space
+
+Give your colleagues a place to learn about your team, and what you’re working on. Use the + buttons in your left-hand sidebar to add more pages, like process docs or a project roadmap.
+
+<aside>
+👋 Welcome to the team! Our mission is to…
+
+Questions? Here’s how to reach us:
+
+- Slack channel:
+- Email:
+- Team manager:
+</aside>
+
+---
+
+## About The Team
+
+---
+
+**Khairul Fahmi Bin Mohd Yusof**
+
+## Prototype
+
+[https://www.figma.com/file/NVQO69UA6T4Y1iAUVooCs3/Untitled?type=design&node-id=1%3A2&mode=design&t=6ct5yU8ouKrWNPeJ-1](https://www.figma.com/file/NVQO69UA6T4Y1iAUVooCs3/Untitled?type=design&node-id=1%3A2&mode=design&t=6ct5yU8ouKrWNPeJ-1)
+
+[https://www.figma.com/file/sWicuSgWRC6ZsHPzb4BHrK/Event-Organiser-App-%5B1001%5D?type=design&node-id=0%3A1&mode=design&t=Ik2VhD9EfrGjPJ28-1](https://www.figma.com/file/sWicuSgWRC6ZsHPzb4BHrK/Event-Organiser-App-%5B1001%5D?type=design&node-id=0%3A1&mode=design&t=Ik2VhD9EfrGjPJ28-1)
+
+## Resources
+
+---
