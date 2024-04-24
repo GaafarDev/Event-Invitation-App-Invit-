@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "979824494785",
+    "project_id": "invit-19028",
+    "storage_bucket": "invit-19028.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979824494785:android:f9c332b188a8abfce9ec40",
+        "android_client_info": {
+          "package_name": "com.example.invit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD2qXFQ_ye0N7xFKKE3LnuUgHpcqls560"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
