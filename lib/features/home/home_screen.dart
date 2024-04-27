@@ -52,8 +52,8 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(items: [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: "Tersimpan"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil")
+        BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: "Saved"),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile")
       ]),
       body: SingleChildScrollView(
         child: SafeArea(
