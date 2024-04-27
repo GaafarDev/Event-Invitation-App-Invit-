@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'features/auth/forget_password.dart';
 
 void main() async {
   // Initialize Firebase
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: true,
       title: 'Login Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -47,7 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Successfully signed in as ${user.email}'),
+            content: Text(
+                'Successfully signed in as ${user.email} with id ${user.uid}'),
           ),
         );
       } else {
@@ -99,6 +102,17 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               child: Text('Log In'),
               onPressed: _signInWithEmailAndPassword,
+            ),
+            SizedBox(height: 24.0),
+            ElevatedButton(
+              child: Text('Forgot Password'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ForgotPasswordScreen()),
+                );
+              },
             ),
           ],
         ),
