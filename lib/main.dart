@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:invit/shared/components/custom_navigationbar.dart';
 
 void main() async {
   // Initialize Firebase
@@ -104,6 +105,10 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: CustomNavigationBar(),
+      floatingActionButton: MyFloatingActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
+
