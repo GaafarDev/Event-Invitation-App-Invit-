@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invit/profile.dart';
 
 
 class CustomNavigationBar extends StatelessWidget {
@@ -15,7 +16,16 @@ class CustomNavigationBar extends StatelessWidget {
           IconButton(icon: Icon(Icons.list_alt), onPressed: () {}),
           SizedBox(width: 48), // The empty space in the middle
           IconButton(icon: Icon(Icons.notifications_on), onPressed: () {}),
-          IconButton(icon: Icon(Icons.person), onPressed: () {}),
+          IconButton(
+    icon: Icon(Icons.person),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Profile()), // Replace with your page class name
+      );
+    },
+  ),
+
         ],
       ),
     );
@@ -32,6 +42,7 @@ class MyFloatingActionButton extends StatelessWidget {
   }
 }
 
+//To call the custom navigation bar
 // bottomNavigationBar: CustomNavigationBar(),
-//       floatingActionButton: MyFloatingActionButton(),
-//       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+// floatingActionButton: MyFloatingActionButton(),
+// floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
