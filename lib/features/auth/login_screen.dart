@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:invit/features/auth/registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -78,6 +79,14 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               child: Text('Log In'),
               onPressed: _signInWithEmailAndPassword,
+            ),
+            SizedBox(height: 24.0),
+            ElevatedButton(
+              child: Text('Create an Account'),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignUpScreen()));
+              },
             ),
           ],
         ),
