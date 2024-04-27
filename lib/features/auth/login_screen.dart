@@ -59,15 +59,25 @@ class _LoginScreenState extends State<LoginScreen> {
           children: <Widget>[
             Image.asset(
               Applogo,
-              height: 300,
-              width: 100,
+              height: 300.0,
+              fit: BoxFit.fitWidth,
             ),
-            SizedBox(height: 24.0),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Welcome!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                  ),
+                )),
+            SizedBox(height: 10.0),
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(
                 labelText: 'Email',
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
               ),
               keyboardType: TextInputType.emailAddress,
             ),
@@ -76,14 +86,37 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: _passwordController,
               decoration: InputDecoration(
                 labelText: 'Password',
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
               ),
               obscureText: true,
+            ),
+            SizedBox(height: 3.0),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignUpScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Forgot Password?",
+                    style: TextStyle(
+                        color: highlight6, fontWeight: FontWeight.bold),
+                  )),
             ),
             SizedBox(height: 24.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: highlight2,
+                minimumSize: Size.fromHeight(60),
+                backgroundColor: highlight6,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7),
+                ),
               ),
               child: Text(
                 'Log In',
@@ -94,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               onPressed: _signInWithEmailAndPassword,
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 12.0),
             Divider(
               height: 2,
               thickness: 2,
@@ -115,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(
                     'Sign Up',
                     style: TextStyle(
-                      color: highlight2,
+                      color: highlight6,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
