@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:invit/features/auth/registration_screen.dart';
+import 'package:invit/features/auth/signup_screen.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 import 'package:invit/shared/constants/colors.dart';
 
@@ -103,23 +103,23 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text('Don\'t have an account?'),
-                // TextButton(
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => SignUpScreen(),
-                //       ),
-                //     );
-                //   },
-                //   child: Text(
-                //     'Sign Up',
-                //     style: TextStyle(
-                //       color: highlight2,
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignUpScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      color: highlight2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
           ],
