@@ -4,6 +4,7 @@ import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/auth/registration_screen.dart';
+import 'package:invit/shared/constants/colors.dart';
 
 void main() async {
   // Initialize Firebase

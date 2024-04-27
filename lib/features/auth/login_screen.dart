@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/auth/registration_screen.dart';
+import 'package:invit/shared/constants/assets_strings.dart';
+import 'package:invit/shared/constants/colors.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -49,15 +51,18 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.fromLTRB(16.0, 2.0, 16, 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            Image.asset(
+              Applogo,
+              height: 300,
+              width: 100,
+            ),
+            SizedBox(height: 24.0),
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(
@@ -77,16 +82,45 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: 24.0),
             ElevatedButton(
-              child: Text('Log In'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: highlight2,
+              ),
+              child: Text(
+                'Log In',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400),
+              ),
               onPressed: _signInWithEmailAndPassword,
             ),
-            SizedBox(height: 24.0),
-            ElevatedButton(
-              child: Text('Create an Account'),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SignUpScreen()));
-              },
+            SizedBox(height: 10.0),
+            Divider(
+              height: 2,
+              thickness: 2,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Don\'t have an account?'),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignUpScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      color: highlight2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
