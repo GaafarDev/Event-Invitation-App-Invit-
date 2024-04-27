@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:your_package_name/login_page.dart'; // replace with your actual import
+import 'package:invit/features/auth/login_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
       );
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => LoginPage(),
+          builder: (context) => LoginScreen(),
         ),
       );
     } catch (e) {

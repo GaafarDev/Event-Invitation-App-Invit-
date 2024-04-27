@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:invit/features/home/home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -68,11 +69,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         );
 
-        //Uncomment this to auto navigate
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => NextScreen()),
-        // );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

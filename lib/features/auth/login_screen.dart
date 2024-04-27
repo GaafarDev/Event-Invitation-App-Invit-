@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/auth/signup_screen.dart';
+import 'package:invit/features/home/home_screen.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 import 'package:invit/shared/constants/colors.dart';
 import 'package:invit/features/auth/forget_password.dart';
@@ -30,6 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
             backgroundColor: Colors.green[300],
             content: Text('Successfully signed in as ${user.email}'),
           ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
