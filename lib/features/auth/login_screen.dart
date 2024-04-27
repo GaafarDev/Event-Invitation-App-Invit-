@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/auth/signup_screen.dart';
 import 'package:invit/features/home/home_screen.dart';
+import 'package:invit/features/profile/profile_screen.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 import 'package:invit/shared/constants/colors.dart';
 import 'package:invit/features/auth/forget_password.dart';
@@ -34,7 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          // MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => ProfileScreen()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -65,8 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: <Widget>[
             Image.asset(
               Applogo,
-              height: 300.0,
-              fit: BoxFit.fitWidth,
+              height: 200.0,
             ),
             Align(
                 alignment: Alignment.centerLeft,
@@ -77,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontSize: 30,
                   ),
                 )),
-            SizedBox(height: 10.0),
+            SizedBox(height: 20.0),
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(
