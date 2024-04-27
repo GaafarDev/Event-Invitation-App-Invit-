@@ -1,45 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:invit/features/auth/signup_screen.dart';
-import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-void main() async {
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  // Run the app
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginScreen(),
-    );
-  }
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
-  void _signInWithEmailAndPassword() async {
+  void _signUpWithEmailAndPassword() async {
     try {
-      final User? user = (await _auth.signInWithEmailAndPassword(
+      if (_passwordController.text != _confirmPasswordController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red[300],
+            content: Text('Passwords do not match'),
+          ),
+        );
+        return;
+      }
+
+      final User? user = (await _auth.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       ))
@@ -48,20 +34,23 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Successfully signed in as ${user.email}'),
+            backgroundColor: Colors.green[300],
+            content: Text('Successfully signed up as ${user.email}'),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No user found for that email and password'),
+            backgroundColor: Colors.red[300],
+            content: Text('Failed to sign up'),
           ),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to sign in with Email & Password'),
+          backgroundColor: Colors.red[300],
+          content: Text('Failed to sign up'),
         ),
       );
     }
@@ -71,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Sign Up'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -96,20 +85,19 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               obscureText: true,
             ),
-            SizedBox(height: 24.0),
-            ElevatedButton(
-              child: Text('Log In'),
-              onPressed: _signInWithEmailAndPassword,
+            SizedBox(height: 16.0),
+            TextFormField(
+              controller: _confirmPasswordController,
+              decoration: InputDecoration(
+                labelText: 'Confirm Password',
+                border: OutlineInputBorder(),
+              ),
+              obscureText: true,
             ),
             SizedBox(height: 24.0),
             ElevatedButton(
               child: Text('Sign Up'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignUpScreen()),
-                );
-              },
+              onPressed: _signUpWithEmailAndPassword,
             ),
           ],
         ),
