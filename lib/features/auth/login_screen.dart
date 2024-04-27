@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/auth/signup_screen.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 import 'package:invit/shared/constants/colors.dart';
+import 'package:invit/features/auth/forget_password.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -121,6 +122,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ],
+            ),
+            SizedBox(height: 10.0),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ForgotPasswordScreen(),
+                  ),
+                );
+              },
+              child: Text(
+                'Forgot Password',
+                style: TextStyle(
+                  color: highlight2,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),
