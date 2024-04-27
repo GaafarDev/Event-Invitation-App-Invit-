@@ -103,23 +103,23 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text('Don\'t have an account?'),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUpScreen(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      color: highlight2,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                // TextButton(
+                //   onPressed: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => SignUpScreen(),
+                //       ),
+                //     );
+                //   },
+                //   child: Text(
+                //     'Sign Up',
+                //     style: TextStyle(
+                //       color: highlight2,
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ],
