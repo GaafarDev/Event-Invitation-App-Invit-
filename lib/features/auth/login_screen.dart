@@ -58,15 +58,17 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(16.0, 2.0, 16, 16),
+        padding: EdgeInsets.fromLTRB(16.0, 10.0, 16, 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Image.asset(
-              Applogo,
-              height: 300.0,
-              fit: BoxFit.fitWidth,
+            Hero(
+              tag: 'Applogo',
+              child: Image.asset(
+                Applogo,
+                height: 200.0,
+              ),
             ),
             Align(
                 alignment: Alignment.centerLeft,
@@ -77,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontSize: 30,
                   ),
                 )),
-            SizedBox(height: 10.0),
+            SizedBox(height: 15.0),
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(

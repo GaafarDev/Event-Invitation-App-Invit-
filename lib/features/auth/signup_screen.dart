@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invit/features/home/home_screen.dart';
+import 'package:invit/shared/constants/assets_strings.dart';
+import 'package:invit/shared/constants/colors.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -95,10 +97,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up'),
+        leading: Hero(
+            tag: 'Applogo',
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: Image.asset(Applogo),
+            )),
+        title: Text(
+          'Sign Up',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.fromLTRB(16.0, 10.0, 16, 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -107,7 +122,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               controller: _emailController,
               decoration: InputDecoration(
                 labelText: 'Email',
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
               ),
               keyboardType: TextInputType.emailAddress,
             ),
@@ -116,7 +132,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               controller: _passwordController,
               decoration: InputDecoration(
                 labelText: 'Password',
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
               ),
               obscureText: true,
             ),
@@ -125,7 +142,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               controller: _confirmPasswordController,
               decoration: InputDecoration(
                 labelText: 'Confirm Password',
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
               ),
               obscureText: true,
             ),
@@ -134,7 +152,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               controller: _fullNameController,
               decoration: InputDecoration(
                 labelText: 'Full Name',
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
               ),
             ),
             SizedBox(height: 16.0),
@@ -142,28 +161,56 @@ class _SignUpScreenState extends State<SignUpScreen> {
               controller: _phoneNoController,
               decoration: InputDecoration(
                 labelText: 'Phone Number',
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
               ),
             ),
             SizedBox(height: 16.0),
-            DropdownButton<String>(
-              value: _selectedGender,
-              hint: Text('Select Gender'),
-              items: _genderOptions.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedGender = newValue;
-                });
-              },
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7),
+                border: Border.all(
+                  color: Colors.grey,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: _selectedGender,
+                  hint: Text('Select Gender'),
+                  items: _genderOptions.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedGender = newValue;
+                    });
+                  },
+                ),
+              ),
             ),
             SizedBox(height: 24.0),
             ElevatedButton(
-              child: Text('Sign Up'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size.fromHeight(60),
+                backgroundColor: highlight6,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7),
+                ),
+              ),
+              child: Text(
+                'Sign Up',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
               onPressed: _signUpWithEmailAndPassword,
             ),
           ],
