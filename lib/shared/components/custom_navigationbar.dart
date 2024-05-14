@@ -24,43 +24,36 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(), //destination screen
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {}, //params
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-        itemCount: iconList.length,
-        tabBuilder: (int index, bool isActive) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(
-                iconList[index],
-                size: 24,
-                color: isActive ? Colors.blue : Colors.grey,
-              ),
-              Text(
-                textList[index],
-                style: TextStyle(color: isActive ? Colors.blue : Colors.grey),
-              ),
-            ],
-          );
-        },
-        activeIndex: _bottomNavIndex,
-        gapLocation: GapLocation.center,
-        notchSmoothness: NotchSmoothness.verySmoothEdge,
-        leftCornerRadius: 32,
-        rightCornerRadius: 32,
-        onTap: (index) {
-          setState(() {
-            _bottomNavIndex = index;
-          });
-        },
-        //other params
-      ),
+    return AnimatedBottomNavigationBar.builder(
+      itemCount: iconList.length,
+      tabBuilder: (int index, bool isActive) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(
+              iconList[index],
+              size: 24,
+              color: isActive ? Colors.blue : Colors.grey,
+            ),
+            Text(
+              textList[index],
+              style: TextStyle(color: isActive ? Colors.blue : Colors.grey),
+            ),
+          ],
+        );
+      },
+      activeIndex: _bottomNavIndex,
+      gapLocation: GapLocation.center,
+      notchSmoothness: NotchSmoothness.verySmoothEdge,
+      leftCornerRadius: 32,
+      rightCornerRadius: 32,
+      onTap: (index) {
+        setState(() {
+          _bottomNavIndex = index;
+        });
+      },
+      //other params
     );
   }
 }

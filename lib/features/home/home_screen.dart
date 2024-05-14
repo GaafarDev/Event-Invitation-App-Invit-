@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
@@ -18,9 +16,7 @@ class _HomePageState extends State<HomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
   final List<Widget> _children = [
-    Text('Home Screen'), //
-    Text(
-        'Saved Screen'), // Replace with your actual saved screen widgetReplace with your actual home screen widget
+    Text('Saved Screen'), // Replace with your actual saved screen widget
     ProfileScreen(),
   ];
 
@@ -56,19 +52,40 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Sign Out'),
-            onPressed: _signOut,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(200.0),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(40),
+            ),
           ),
-        ],
+          child: AppBar(
+            backgroundColor: Colors.indigoAccent,
+            title: Text('Home'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Sign Out'),
+                onPressed: _signOut,
+              ),
+            ],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(30),
+              ),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add your action here
+        },
+        child: const Icon(Icons.add),
       ),
       backgroundColor: Colors.white,
-      bottomNavigationBar:
-          CustomNavigationBar(), // Use your CustomNavigationBar widget here
-      body: _children[_currentIndex],
+      bottomNavigationBar: CustomNavigationBar(),
     );
   }
 }
