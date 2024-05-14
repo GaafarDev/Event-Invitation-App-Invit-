@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: Colors.green[300],
+            backgroundColor: Colors.green[200],
             content: Text('Successfully signed in as ${user.email}'),
           ),
         );
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            backgroundColor: Colors.red[300],
+            backgroundColor: Colors.red[200],
             content: Text('No user found for that email and password'),
           ),
         );
@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.red[300],
+          backgroundColor: fail,
           content: Text('Failed to sign in with Email & Password'),
         ),
       );
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SignUpScreen(),
+                        builder: (context) => ForgotPasswordScreen(),
                       ),
                     );
                   },
@@ -166,23 +166,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             SizedBox(height: 10.0),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ForgotPasswordScreen(),
-                  ),
-                );
-              },
-              child: Text(
-                'Forgot Password',
-                style: TextStyle(
-                  color: highlight2,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
           ],
         ),
       ),
