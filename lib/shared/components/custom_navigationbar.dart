@@ -18,16 +18,18 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
-  height: 70.0, // Set the height of the Container
-  width: 70.0, // Set the width of the Container
-  child: FloatingActionButton(
-    child: Icon(Icons.add, size: 40.0, color: neutralLight5), // Increase the size of the icon
-    onPressed: () {},
-    backgroundColor: button1,
-    shape: CircleBorder(),
-    elevation: 10.0, // Increase the elevation for a "raised" effect
-  ),
-),
+        height: 70.0, // Set the height of the Container
+        width: 70.0, // Set the width of the Container
+        child: FloatingActionButton(
+          child: Icon(Icons.add,
+              size: 40.0,
+              color: neutralLight5), // Increase the size of the icon
+          onPressed: () {},
+          backgroundColor: button1,
+          shape: CircleBorder(),
+          elevation: 10.0, // Increase the elevation for a "raised" effect
+        ),
+      ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 5.0,
@@ -40,13 +42,14 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   IconButton(
-              icon: Icon(Icons.home, color: _currentIndex == 0 ? Colors.blue : Colors.grey),
-              onPressed: () {
-                setState(() {
-                  _currentIndex = 0;
-                });
-              },
-            ),
+                    icon: Icon(Icons.home,
+                        color: _currentIndex == 0 ? Colors.blue : Colors.grey),
+                    onPressed: () {
+                      setState(() {
+                        _currentIndex = 0;
+                      });
+                    },
+                  ),
                   Text('Home'),
                 ],
               ),
@@ -54,28 +57,33 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   IconButton(
-              icon: Icon(Icons.event, color: _currentIndex == 1 ? Colors.blue : Colors.grey,),
-              onPressed: () {
-                setState(() {
-                  _currentIndex = 1;
-                });
-              },
-            ),
+                    icon: Icon(
+                      Icons.event,
+                      color: _currentIndex == 1 ? Colors.blue : Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _currentIndex = 1;
+                      });
+                    },
+                  ),
                   Text('Events'),
                 ],
               ),
-              SizedBox.shrink(), // The dummy space for the floating action button
+              SizedBox
+                  .shrink(), // The dummy space for the floating action button
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   IconButton(
-              icon: Icon(Icons.map, color: _currentIndex == 2 ? Colors.blue : Colors.grey),
-              onPressed: () {
-                setState(() {
-                  _currentIndex = 2;
-                });
-              },
-            ),
+                    icon: Icon(Icons.map,
+                        color: _currentIndex == 2 ? Colors.blue : Colors.grey),
+                    onPressed: () {
+                      setState(() {
+                        _currentIndex = 2;
+                      });
+                    },
+                  ),
                   Text('Map'),
                 ],
               ),
@@ -83,14 +91,30 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   IconButton(
-              icon: Icon(Icons.attach_money, color: _currentIndex == 3 ? Colors.blue : Colors.grey),
-              onPressed: () {
-                setState(() {
-                  _currentIndex = 3;
-                });
-              },
-            ),
+                    icon: Icon(Icons.attach_money,
+                        color: _currentIndex == 3 ? Colors.blue : Colors.grey),
+                    onPressed: () {
+                      setState(() {
+                        _currentIndex = 3;
+                      });
+                    },
+                  ),
                   Text('Finance'),
+                ],
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.person,
+                        color: _currentIndex == 4 ? Colors.blue : Colors.grey),
+                    onPressed: () {
+                      setState(() {
+                        _currentIndex = 4;
+                      });
+                    },
+                  ),
+                  Text('invitations'),
                 ],
               ),
             ],
