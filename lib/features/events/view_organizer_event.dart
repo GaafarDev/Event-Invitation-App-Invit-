@@ -72,25 +72,44 @@ class _OrganizerViewEventScreenState extends State<OrganizerViewEventScreen> {
                         ],
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            data['name'],
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                      child: Row(
+                        children: [
+                          if (data['picture_url'] != null)
+                            Image.network(
+                              data['picture_url'],
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            )
+                          else
+                            Image.asset(
+                              'assets/images/default_image.png',
+                              width: 100,
+                              height: 100,
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Date & Time: ${DateFormat(' HH:mm, d MMM yyyy').format(data['start_date'].toDate())} - ${DateFormat(' HH:mm, d MMM yyyy').format(data['end_date'].toDate())}',
-                            style: TextStyle(fontSize: 15),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Venue: ${data['venue']}',
-                            style: TextStyle(fontSize: 15),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  data['name'],
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Date & Time: ${DateFormat(' HH:mm, d MMM yyyy').format(data['start_date'].toDate())} - ${DateFormat(' HH:mm, d MMM yyyy').format(data['end_date'].toDate())}',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Venue: ${data['venue']}',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
