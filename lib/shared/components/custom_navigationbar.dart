@@ -1,49 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:invit/features/profile/profile_screen.dart';
-import 'package:invit/profile.dart';
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
-class CustomNavigationBar extends StatelessWidget {
+class CustomNavigationBar extends StatefulWidget {
+  final Function(int) onTap;
+
+  CustomNavigationBar({required this.onTap});
+
+  @override
+  _CustomNavigationBarState createState() => _CustomNavigationBarState();
+}
+
+class _CustomNavigationBarState extends State<CustomNavigationBar> {
+  int _bottomNavIndex = 0; //default index of a first screen
+
+  final iconList = <IconData>[
+    Icons.home,
+    Icons.event,
+    Icons.map,
+    Icons.insert_invitation,
+  ];
+
+  final textList = <String>[
+    'Home',
+    'events',
+    'map',
+    'Invitation',
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      shape: CircularNotchedRectangle(),
-      notchMargin: 6.0,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          IconButton(icon: Icon(Icons.home), onPressed: () {}),
-          IconButton(icon: Icon(Icons.list_alt), onPressed: () {}),
-          SizedBox(width: 48), // The empty space in the middle
-          IconButton(icon: Icon(Icons.notifications_on), onPressed: () {}),
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ProfileScreen()), // Replace with your page class name
-              );
-            },
-          ),
-        ],
-      ),
+    return AnimatedBottomNavigationBar.builder(
+      itemCount: iconList.length,
+      tabBuilder: (int index, bool isActive) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(
+              iconList[index],
+              size: 24,
+              color: isActive ? Colors.blue : Colors.grey,
+            ),
+            Text(
+              textList[index],
+              style: TextStyle(color: isActive ? Colors.blue : Colors.grey),
+            ),
+          ],
+        );
+      },
+      activeIndex: _bottomNavIndex,
+      gapLocation: GapLocation.center,
+      notchSmoothness: NotchSmoothness.verySmoothEdge,
+      leftCornerRadius: 32,
+      rightCornerRadius: 32,
+      onTap: (index) {
+        setState(() {
+          _bottomNavIndex = index;
+        });
+        widget.onTap(index);
+      },
     );
   }
 }
-
-class MyFloatingActionButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      child: Icon(Icons.add, size: 32), // Larger icon size for the FAB
-      onPressed: () {},
-    );
-  }
-}
-
-//To call the custom navigation bar
-// bottomNavigationBar: CustomNavigationBar(),
-// floatingActionButton: MyFloatingActionButton(),
-// floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

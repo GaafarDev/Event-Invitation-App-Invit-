@@ -47,6 +47,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Create Event'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -248,6 +251,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     );
                   });
                 }
+                Navigator.pop(context);
               },
             ),
           ],
