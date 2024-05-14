@@ -4,6 +4,8 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/auth/login_screen.dart';
+import 'package:invit/features/events/create_event_screen.dart';
+import 'package:invit/features/events/view_organizer_event.dart';
 import 'package:invit/features/profile/profile_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,7 +19,9 @@ class _HomePageState extends State<HomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
   final List<Widget> _children = [
-    Text('Home Screen'), //
+    // Text('Home Screen'), //
+    OrganizerViewEventScreen(),
+    // CreateEventScreen(),
     Text(
         'Saved Screen'), // Replace with your actual saved screen widgetReplace with your actual home screen widget
     ProfileScreen(),
