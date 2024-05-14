@@ -1,49 +1,102 @@
 import 'package:flutter/material.dart';
-import 'package:invit/features/profile/profile_screen.dart';
-import 'package:invit/profile.dart';
+import 'package:invit/shared/constants/colors.dart';
 
-class CustomNavigationBar extends StatelessWidget {
+class CustomNavigationBar extends StatefulWidget {
+  @override
+  _CustomNavigationBarState createState() => _CustomNavigationBarState();
+}
+
+class _CustomNavigationBarState extends State<CustomNavigationBar> {
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      shape: CircularNotchedRectangle(),
-      notchMargin: 6.0,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          IconButton(icon: Icon(Icons.home), onPressed: () {}),
-          IconButton(icon: Icon(Icons.list_alt), onPressed: () {}),
-          SizedBox(width: 48), // The empty space in the middle
-          IconButton(icon: Icon(Icons.notifications_on), onPressed: () {}),
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ProfileScreen()), // Replace with your page class name
-              );
-            },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Example'),
+      ),
+      extendBody: true,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+  height: 70.0, // Set the height of the Container
+  width: 70.0, // Set the width of the Container
+  child: FloatingActionButton(
+    child: Icon(Icons.add, size: 40.0, color: neutralLight5), // Increase the size of the icon
+    onPressed: () {},
+    backgroundColor: button1,
+    shape: CircleBorder(),
+    elevation: 10.0, // Increase the elevation for a "raised" effect
+  ),
+),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 5.0,
+        height: 90.0,
+        child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+              icon: Icon(Icons.home, color: _currentIndex == 0 ? Colors.blue : Colors.grey),
+              onPressed: () {
+                setState(() {
+                  _currentIndex = 0;
+                });
+              },
+            ),
+                  Text('Home'),
+                ],
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+              icon: Icon(Icons.event, color: _currentIndex == 1 ? Colors.blue : Colors.grey,),
+              onPressed: () {
+                setState(() {
+                  _currentIndex = 1;
+                });
+              },
+            ),
+                  Text('Events'),
+                ],
+              ),
+              SizedBox.shrink(), // The dummy space for the floating action button
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+              icon: Icon(Icons.map, color: _currentIndex == 2 ? Colors.blue : Colors.grey),
+              onPressed: () {
+                setState(() {
+                  _currentIndex = 2;
+                });
+              },
+            ),
+                  Text('Map'),
+                ],
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+              icon: Icon(Icons.attach_money, color: _currentIndex == 3 ? Colors.blue : Colors.grey),
+              onPressed: () {
+                setState(() {
+                  _currentIndex = 3;
+                });
+              },
+            ),
+                  Text('Finance'),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
-
-class MyFloatingActionButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      child: Icon(Icons.add, size: 32), // Larger icon size for the FAB
-      onPressed: () {},
-    );
-  }
-}
-
-//To call the custom navigation bar
-// bottomNavigationBar: CustomNavigationBar(),
-// floatingActionButton: MyFloatingActionButton(),
-// floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
