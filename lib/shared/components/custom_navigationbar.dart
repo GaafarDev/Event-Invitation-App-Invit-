@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:invit/features/profile/profile_screen.dart';
 import 'package:invit/profile.dart';
-
 
 class CustomNavigationBar extends StatelessWidget {
   @override
@@ -17,15 +17,16 @@ class CustomNavigationBar extends StatelessWidget {
           SizedBox(width: 48), // The empty space in the middle
           IconButton(icon: Icon(Icons.notifications_on), onPressed: () {}),
           IconButton(
-    icon: Icon(Icons.person),
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Profile()), // Replace with your page class name
-      );
-    },
-  ),
-
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ProfileScreen()), // Replace with your page class name
+              );
+            },
+          ),
         ],
       ),
     );
@@ -36,7 +37,7 @@ class MyFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      child: Icon(Icons.add, size:32 ), // Larger icon size for the FAB
+      child: Icon(Icons.add, size: 32), // Larger icon size for the FAB
       onPressed: () {},
     );
   }
