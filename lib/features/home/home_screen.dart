@@ -19,11 +19,10 @@ class _HomePageState extends State<HomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
   final List<Widget> _children = [
-    // Text('Home Screen'), //
+    Text('Home Screen'), //
+    Text('Search Event'),
     OrganizerViewEventScreen(),
-    // CreateEventScreen(),
-    Text(
-        'Saved Screen'), // Replace with your actual saved screen widgetReplace with your actual home screen widget
+    // CreateEventScreen(), // Replace with your actual saved screen widgetReplace with your actual home screen widget
     ProfileScreen(),
   ];
 
@@ -69,11 +68,13 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         onTap: onTabTapped,
         currentIndex: _currentIndex,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: "Saved"),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: "Events"),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: "My Events"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
