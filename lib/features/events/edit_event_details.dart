@@ -221,7 +221,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
             ),
             const SizedBox(height: 24.0),
             ElevatedButton(
-              child: const Text('Create Event'),
+              child: const Text('Edit Event'),
               onPressed: () {
                 if (_eventNameController.text.isEmpty ||
                     _eventStartDate == null ||
