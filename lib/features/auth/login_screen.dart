@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/auth/signup_screen.dart';
 import 'package:invit/features/home/home_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
+import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 import 'package:invit/shared/constants/colors.dart';
 import 'package:invit/features/auth/forget_password.dart';

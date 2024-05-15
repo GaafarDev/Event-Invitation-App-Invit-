@@ -5,6 +5,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
+import 'package:invit/features/subscription/getSubscription.dart';
+import 'package:invit/shared/constants/assets_strings.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -55,6 +57,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => GetSubscription()),
+            );
+          },
+          child: Image.asset(
+            SubscriptionIcon,
+            width: 30,
+            height: 30,
+          ),
+        ),
         title: Text('Home'),
         actions: <Widget>[
           TextButton(
