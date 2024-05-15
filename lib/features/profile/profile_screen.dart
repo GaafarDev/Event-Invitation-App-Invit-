@@ -159,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    'edit',
+                                    'Edit',
                                     style: TextStyle(color: neutralLight5),
                                   ),
                                 ),

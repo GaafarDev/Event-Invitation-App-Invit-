@@ -11,6 +11,12 @@ class EditProfileScreen extends StatefulWidget {
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
+//TODO by CHING
+//Add label text for each of the text box
+//fix the gender problem not being selected to current by default
+//fix the formatting of subscription end date
+//Maybe even remove the subs day
+
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
   late DocumentReference userDocRef; // Reference to the user's document

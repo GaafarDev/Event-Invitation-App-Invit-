@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
     Text('Home Screen'), // Replace with your actual saved screen widget
     OrganizerViewEventScreen(),
     Text('Map'), // Replace with your actual saved screen widget
-    ProfileScreen(),
+    Text('Invitation'),
   ];
 
   void _signOut() async {

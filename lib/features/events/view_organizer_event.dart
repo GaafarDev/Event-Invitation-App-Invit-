@@ -17,7 +17,7 @@ class _OrganizerViewEventScreenState extends State<OrganizerViewEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Events'),
+        title: Text('My Created Events'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
