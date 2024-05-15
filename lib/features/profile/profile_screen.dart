@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:invit/features/profile/edit_profile.dart';
+import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/constants/colors.dart';
 import 'package:invit/shared/constants/sizes.dart';
 
@@ -175,6 +176,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => EditProfileScreen()),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 68.0),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Container(
+                          height: 50, // Change this to your desired height
+                          width: 400, // Change this to your desired width
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: button1,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Get Premium Subscription',
+                                    style: TextStyle(color: neutralLight5),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Icon(Icons.arrow_forward_ios,
+                                      color: neutralLight5), // Add this line
+                                ),
+                              ],
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => GetSubscription()),
                               );
                             },
                           ),

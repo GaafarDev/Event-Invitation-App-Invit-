@@ -8,6 +8,7 @@ const Color highlight3 = Color(0xFF6BA3F7);
 const Color highlight4 = Color(0xFFB4DBF7);
 const Color highlight5 = Color(0xFFEAF2FF);
 const Color highlight6 = Color(0xFF006FFD);
+const Color highlight7 = Color(0xFFC7C5F9);
 
 const Color neutralLight1 = Color(0xFFC6C8CC);
 const Color neutralLight2 = Color(0xFFD4D8DD);

@@ -24,3 +24,14 @@ const String loginTitle = "Welcome Back";
 const String loginSubTitle = "Make it work, make it right, make it fast.";
 const String rememberMe = "Remember Me?";
 const String alreadyHaveAnAccount = "Already have an Account?";
+
+// Subsription Screen Text
+const String subscriptionTitle = "Get Premium Access";
+const String titleDescription =
+    "Get yourself a subscription to become an organizer and unlock the full power of INVIT and enjoy the digital experience like never before!.";
+const String termsAndConditions =
+    "By placing this order, you agree to the Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period.";
+const String annualPrice = "\$99.99 per year";
+const String monthlyPrice = "\$15.99 per Month";
+const String annual = "1 Year";
+const String monthly = "1 Month";
