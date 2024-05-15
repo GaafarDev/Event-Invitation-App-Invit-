@@ -22,8 +22,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
 
   final textList = <String>[
     'Home',
-    'events',
-    'map',
+    'Events',
+    'Map',
     'Invitation',
   ];
 

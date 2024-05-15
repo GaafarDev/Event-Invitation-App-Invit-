@@ -84,6 +84,9 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 15.0),
             TextFormField(
               controller: _emailController,
+              onFieldSubmitted: (value) {
+                _signInWithEmailAndPassword();
+              },
               decoration: InputDecoration(
                 labelText: 'Email',
                 border:
@@ -94,6 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 16.0),
             TextFormField(
               controller: _passwordController,
+              onFieldSubmitted: (value) {
+                _signInWithEmailAndPassword();
+              },
               decoration: InputDecoration(
                 labelText: 'Password',
                 border:
