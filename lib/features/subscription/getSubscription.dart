@@ -61,7 +61,7 @@ class _GetSubscriptionState extends State<GetSubscription> {
             SizedBox(height: 10.0),
             _buildSubscriptionButton(
               planName: 'Add 1 Year',
-              price: '\$99.99 For One Year',
+              price: '99.99 RM For One Year',
               duration: Duration(days: 365), // Update subscription by 1 year
               onPressed: () => setState(() => selectedPlan = 'Add 1 Year'),
               width: buttonWidth,
@@ -69,7 +69,7 @@ class _GetSubscriptionState extends State<GetSubscription> {
             SizedBox(height: 10.0),
             _buildSubscriptionButton(
               planName: 'Add 1 Month',
-              price: '\$15.99 For One Month',
+              price: '15.99 RM For One Month',
               duration: Duration(days: 30), // Update subscription by 1 month
               onPressed: () => setState(() => selectedPlan = 'Add 1 Month'),
               width: buttonWidth,
