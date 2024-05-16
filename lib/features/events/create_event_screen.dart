@@ -50,211 +50,215 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       appBar: AppBar(
         title: Text('Create Event'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextFormField(
-              controller: _eventNameController,
-              decoration: const InputDecoration(
-                labelText: 'Event Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            TextFormField(
-              controller: _eventDescriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Event Description',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.multiline,
-              maxLines: 2,
-            ),
-            const SizedBox(height: 16.0),
-            TextFormField(
-              controller: _venueController,
-              decoration: const InputDecoration(
-                labelText: 'Venue Address',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Start Date & Time:'),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Text(
-                    ' ${DateFormat('dd MMM yyyy HH:mm').format(_eventStartDate)}',
-                    style: TextStyle(fontSize: 16),
-                  ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormField(
+                controller: _eventNameController,
+                decoration: const InputDecoration(
+                  labelText: 'Event Name',
+                  border: OutlineInputBorder(),
                 ),
-                ElevatedButton(
-                  child: Text('Select Start Date and Time'),
-                  onPressed: () async {
-                    final DateTime? picked =
-                        await _selectDateTime(context, _eventStartDate);
-                    if (picked != null) {
-                      setState(() {
-                        _eventStartDate = picked;
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('End Date & Time:'),
-                Container(
-                  padding: EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Text(
-                    ' ${DateFormat('dd MMM yyyy HH:mm').format(_eventEndDate)}',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                ElevatedButton(
-                  child: Text('Select End Date and Time'),
-                  onPressed: () async {
-                    final DateTime? picked =
-                        await _selectDateTime(context, _eventEndDate);
-                    if (picked != null) {
-                      setState(() {
-                        _eventEndDate = picked;
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 16.0),
-            TextFormField(
-              controller: _eventMaxCapacityController,
-              decoration: const InputDecoration(
-                labelText: 'Max Capacity',
-                border: OutlineInputBorder(),
               ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16.0),
-            TextFormField(
-              controller: _ticketPriceController,
-              decoration: const InputDecoration(
-                labelText: 'Ticket Price (RM)',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                controller: _eventDescriptionController,
+                decoration: const InputDecoration(
+                  labelText: 'Event Description',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: 2,
               ),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-            ),
-            const SizedBox(height: 24.0),
-            Container(
-              padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(5.0),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                controller: _venueController,
+                decoration: const InputDecoration(
+                  labelText: 'Venue Address',
+                  border: OutlineInputBorder(),
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Event Type',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  Text('Start Date & Time:'),
+                  Container(
+                    padding: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Text(
+                      ' ${DateFormat('dd MMM yyyy HH:mm').format(_eventStartDate)}',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
-                  RadioListTile<EventType>(
-                    title: const Text('Public'),
-                    value: EventType.public,
-                    groupValue: _eventType,
-                    onChanged: (EventType? value) {
-                      setState(() {
-                        _eventType = value!;
-                      });
-                    },
-                  ),
-                  RadioListTile<EventType>(
-                    title: const Text('Private'),
-                    value: EventType.private,
-                    groupValue: _eventType,
-                    onChanged: (EventType? value) {
-                      setState(() {
-                        _eventType = value!;
-                      });
+                  ElevatedButton(
+                    child: Text('Select Start Date and Time'),
+                    onPressed: () async {
+                      final DateTime? picked =
+                          await _selectDateTime(context, _eventStartDate);
+                      if (picked != null) {
+                        setState(() {
+                          _eventStartDate = picked;
+                        });
+                      }
                     },
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24.0),
-            ElevatedButton(
-              child: const Text('Create Event'),
-              onPressed: () {
-                if (_eventNameController.text.isEmpty ||
-                    _eventStartDate == null ||
-                    _eventEndDate == null ||
-                    _ticketPriceController.text.isEmpty ||
-                    _venueController.text.isEmpty ||
-                    _eventDescriptionController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('All fields are mandatory!'),
-                      backgroundColor: Colors.red,
+              const SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('End Date & Time:'),
+                  Container(
+                    padding: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
-                  );
-                } else if (_eventStartDate.isBefore(DateTime.now())) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Start date cannot be in the past'),
-                      backgroundColor: Colors.red,
+                    child: Text(
+                      ' ${DateFormat('dd MMM yyyy HH:mm').format(_eventEndDate)}',
+                      style: TextStyle(fontSize: 16),
                     ),
-                  );
-                } else if (_eventStartDate.isAfter(_eventEndDate)) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Start date cannot be after end date'),
-                      backgroundColor: Colors.red,
+                  ),
+                  ElevatedButton(
+                    child: Text('Select End Date and Time'),
+                    onPressed: () async {
+                      final DateTime? picked =
+                          await _selectDateTime(context, _eventEndDate);
+                      if (picked != null) {
+                        setState(() {
+                          _eventEndDate = picked;
+                        });
+                      }
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                controller: _eventMaxCapacityController,
+                decoration: const InputDecoration(
+                  labelText: 'Max Capacity',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                controller: _ticketPriceController,
+                decoration: const InputDecoration(
+                  labelText: 'Ticket Price (RM)',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+              ),
+              const SizedBox(height: 24.0),
+              Container(
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Event Type',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                  );
-                } else {
-                  final user = FirebaseAuth.instance.currentUser;
-                  final eventCollection =
-                      FirebaseFirestore.instance.collection('events');
+                    RadioListTile<EventType>(
+                      title: const Text('Public'),
+                      value: EventType.public,
+                      groupValue: _eventType,
+                      onChanged: (EventType? value) {
+                        setState(() {
+                          _eventType = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile<EventType>(
+                      title: const Text('Private'),
+                      value: EventType.private,
+                      groupValue: _eventType,
+                      onChanged: (EventType? value) {
+                        setState(() {
+                          _eventType = value!;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24.0),
+              ElevatedButton(
+                child: const Text('Create Event'),
+                onPressed: () {
+                  if (_eventNameController.text.isEmpty ||
+                      _eventStartDate == null ||
+                      _eventEndDate == null ||
+                      _ticketPriceController.text.isEmpty ||
+                      _venueController.text.isEmpty ||
+                      _eventDescriptionController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('All fields are mandatory!'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } else if (_eventStartDate.isBefore(DateTime.now())) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Start date cannot be in the past'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } else if (_eventStartDate.isAfter(_eventEndDate)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Start date cannot be after end date'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } else {
+                    final user = FirebaseAuth.instance.currentUser;
+                    final eventCollection =
+                        FirebaseFirestore.instance.collection('events');
 
-                  eventCollection.add({
-                    'user_id': user!.uid,
-                    'name': _eventNameController.text,
-                    'start_date': _eventStartDate,
-                    'end_date': _eventEndDate,
-                    'ticket_price': double.parse(_ticketPriceController.text),
-                    'venue': _venueController.text,
-                    'description': _eventDescriptionController.text,
-                    'max_capacity': _eventMaxCapacityController.text,
-                    'type':
-                        _eventType == EventType.public ? 'public' : 'private',
-                  }).then((value) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Event created successfully')),
-                    );
-                  }).catchError((error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to create event: $error')),
-                    );
-                  });
-                }
-                Navigator.pop(context);
-              },
-            ),
-          ],
+                    eventCollection.add({
+                      'user_id': user!.uid,
+                      'name': _eventNameController.text,
+                      'start_date': _eventStartDate,
+                      'end_date': _eventEndDate,
+                      'ticket_price': double.parse(_ticketPriceController.text),
+                      'venue': _venueController.text,
+                      'description': _eventDescriptionController.text,
+                      'max_capacity': _eventMaxCapacityController.text,
+                      'type':
+                          _eventType == EventType.public ? 'public' : 'private',
+                    }).then((value) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Event created successfully')),
+                      );
+                    }).catchError((error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text('Failed to create event: $error')),
+                      );
+                    });
+                  }
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
