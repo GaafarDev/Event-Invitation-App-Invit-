@@ -5,29 +5,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_organizer_event.dart';
-import 'package:invit/features/home/home_screen_org.dart';
+import 'package:invit/features/home/home_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
 import 'package:invit/shared/components/custom_navigationbar.dart';
 import 'package:invit/features/subscription/getSubscription.dart';
+import 'package:invit/shared/components/custom_navigationbar_org.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePageOrg extends StatefulWidget {
+  const HomePageOrg({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePageOrg> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePageOrg> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
   String searchString = '';
   final List<Widget> _children = [
-    Text('Home Screen'), // Replace with your actual saved screen widget
-    Text('User Event View'),
-    // OrganizerViewEventScreen(),
+    Text('Org Home Screen'), // Replace with your actual saved screen widget
+    OrganizerViewEventScreen(),
     Text('Map'), // Replace with your actual saved screen widget
-    Text('Invitation'),
+    Text('Org Finance'),
   ];
 
   void _signOut() async {
@@ -81,13 +81,13 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.indigoAccent,
             title: Row(
               children: [
-                Text('Invit User View'),
+                Text('Invit Organizer View'),
                 IconButton(
-                  icon: Icon(Icons.add),
+                  icon: Icon(Icons.backspace),
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => HomePageOrg()),
+                      MaterialPageRoute(builder: (context) => HomePage()),
                     );
                   },
                 ),
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.add),
       ),
       backgroundColor: Colors.white,
-      bottomNavigationBar: CustomNavigationBar(
+      bottomNavigationBar: CustomNavigationBarOrg(
         onTap: onTabTapped,
       ),
     );

@@ -25,6 +25,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        // When navigating to the "/" route, build the FirstScreen widget.
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/HomePageUser': (context) => HomePage(),
+      },
       debugShowCheckedModeBanner: false,
       home: StreamBuilder<User?>(
         stream: _auth.authStateChanges(),
