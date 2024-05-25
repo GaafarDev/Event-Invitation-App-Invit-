@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,18 +61,28 @@ class EventDetailsScreen extends StatelessWidget {
             //   style: TextStyle(fontSize: 15),
             // ),
             if (eventData['user_id'] == FirebaseAuth.instance.currentUser!.uid)
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to the edit event details screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EditEventScreen(eventData: eventData),
-                    ),
-                  );
-                },
-                child: Text('Edit Event Details'),
+              Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the edit event details screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditEventScreen(eventData: eventData),
+                        ),
+                      );
+                    },
+                    child: Text('Edit Event Details'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      //Open a new page, and display list of users in that page
+                    },
+                    child: Text('Send Invitation'),
+                  ),
+                ],
               ),
           ],
         ),

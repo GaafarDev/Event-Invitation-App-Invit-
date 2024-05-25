@@ -121,10 +121,17 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => CreateEventScreen()),
+            MaterialPageRoute(builder: (context) => HomePageOrg()),
+            (Route<dynamic> route) => false,
           );
+          Future.delayed(Duration.zero, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateEventScreen()),
+            );
+          });
         },
         child: const Icon(Icons.add),
       ),
