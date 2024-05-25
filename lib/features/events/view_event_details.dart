@@ -18,72 +18,128 @@ class EventDetailsScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Event Name: ${eventData['name']}',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'Event Description: ${eventData['description']}',
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              'Start Date & Time: ${DateFormat('d MMM yyyy HH:mm').format(eventData['start_date'].toDate())}',
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              'End Date & Time: ${DateFormat('d MMM yyyy HH:mm').format(eventData['end_date'].toDate())}',
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              'Venue: ${eventData['venue']}',
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              'Ticket Price: ${eventData['ticket_price']}',
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              'Max Capacity: ${eventData['max_capacity']}',
-              style: TextStyle(fontSize: 15),
-            ),
-            Text(
-              'Type: ${eventData['type']}',
-              style: TextStyle(fontSize: 15),
-            ),
-            if (eventData['user_id'] == FirebaseAuth.instance.currentUser!.uid)
-              Column(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 16),
+              Divider(),
+              SizedBox(height: 16),
+              Text(
+                'Event Details',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text(
+                eventData['description'],
+                style: TextStyle(fontSize: 15),
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Navigate to the edit event details screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              EditEventScreen(eventData: eventData),
-                        ),
-                      );
-                    },
-                    child: Text('Edit Event Details'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              SendInvitationPage(eventData: eventData),
-                        ),
-                      );
-                    },
-                    child: Text('Send Invitation'),
+                  Icon(Icons.calendar_today),
+                  SizedBox(width: 8),
+                  Text(
+                    'Start Date & Time: ${DateFormat('d MMM yyyy HH:mm').format(eventData['start_date'].toDate())}',
+                    style: TextStyle(fontSize: 15),
                   ),
                 ],
               ),
-          ],
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.calendar_today),
+                  SizedBox(width: 8),
+                  Text(
+                    'End Date & Time: ${DateFormat('d MMM yyyy HH:mm').format(eventData['end_date'].toDate())}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.location_on),
+                  SizedBox(width: 8),
+                  Text(
+                    'Venue: ${eventData['venue']}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.attach_money),
+                  SizedBox(width: 8),
+                  Text(
+                    'Ticket Price: RM ${eventData['ticket_price']}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.people),
+                  SizedBox(width: 8),
+                  Text(
+                    'Max Capacity: ${eventData['max_capacity']}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.lock),
+                  SizedBox(width: 8),
+                  Text(
+                    'Type: ${eventData['type']}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              if (eventData['user_id'] ==
+                  FirebaseAuth.instance.currentUser!.uid)
+                Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EditEventScreen(eventData: eventData),
+                          ),
+                        );
+                      },
+                      child: Text('Edit Event Details'),
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SendInvitationPage(eventData: eventData),
+                          ),
+                        );
+                      },
+                      child: Text('Send Invitation'),
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );
