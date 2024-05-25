@@ -6,6 +6,7 @@ import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_organizer_event.dart';
 import 'package:invit/features/home/home_screen_org.dart';
+import 'package:invit/features/invitations/view_invitations.dart';
 import 'package:invit/features/profile/profile_screen.dart';
 import 'package:invit/shared/components/custom_navigationbar.dart';
 import 'package:invit/features/subscription/getSubscription.dart';
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     Text('User Event View'),
     // OrganizerViewEventScreen(),
     Text('Map'), // Replace with your actual saved screen widget
-    Text('Invitation'),
+    InvitationPage() // Text('Invitation'),
   ];
 
   void _signOut() async {
