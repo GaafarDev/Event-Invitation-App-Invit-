@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:invit/features/events/edit_event_details.dart';
+import 'package:invit/features/invitations/send_invitations.dart';
 
 class EventDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> eventData;
@@ -52,14 +53,6 @@ class EventDetailsScreen extends StatelessWidget {
               'Type: ${eventData['type']}',
               style: TextStyle(fontSize: 15),
             ),
-            // Text(
-            //   'Event User ID: ${eventData['user_id']}',
-            //   style: TextStyle(fontSize: 15),
-            // ),
-            // Text(
-            //   'Current User ID: ${FirebaseAuth.instance.currentUser!.uid}',
-            //   style: TextStyle(fontSize: 15),
-            // ),
             if (eventData['user_id'] == FirebaseAuth.instance.currentUser!.uid)
               Column(
                 children: [
@@ -78,7 +71,13 @@ class EventDetailsScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      //Open a new page, and display list of users in that page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SendInvitationPage(eventData: eventData),
+                        ),
+                      );
                     },
                     child: Text('Send Invitation'),
                   ),
