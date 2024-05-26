@@ -60,120 +60,123 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(16.0, 10.0, 16, 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Hero(
-              tag: 'Applogo',
-              child: Image.asset(
-                Applogo,
-                height: 200.0,
-              ),
-            ),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Welcome!",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-                )),
-            SizedBox(height: 15.0),
-            TextFormField(
-              controller: _emailController,
-              onFieldSubmitted: (value) {
-                _signInWithEmailAndPassword();
-              },
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
-              ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            SizedBox(height: 16.0),
-            TextFormField(
-              controller: _passwordController,
-              onFieldSubmitted: (value) {
-                _signInWithEmailAndPassword();
-              },
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(7)),
-              ),
-              obscureText: true,
-            ),
-            SizedBox(height: 3.0),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ForgotPasswordScreen(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    "Forgot Password?",
-                    style: TextStyle(
-                        color: highlight6, fontWeight: FontWeight.bold),
-                  )),
-            ),
-            SizedBox(height: 24.0),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size.fromHeight(60),
-                backgroundColor: highlight6,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(7),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 20.0, 16, 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(height: 150.0),
+              Hero(
+                tag: 'Applogo',
+                child: Image.asset(
+                  Applogo,
+                  height: 200.0,
                 ),
               ),
-              child: Text(
-                'Log In',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400),
-              ),
-              onPressed: _signInWithEmailAndPassword,
-            ),
-            SizedBox(height: 12.0),
-            Divider(
-              height: 2,
-              thickness: 2,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Don\'t have an account?'),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUpScreen(),
-                      ),
-                    );
-                  },
+              Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
-                    'Sign Up',
+                    "Welcome!",
                     style: TextStyle(
-                      color: highlight6,
                       fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+                  )),
+              SizedBox(height: 15.0),
+              TextFormField(
+                controller: _emailController,
+                onFieldSubmitted: (value) {
+                  _signInWithEmailAndPassword();
+                },
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7)),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              SizedBox(height: 16.0),
+              TextFormField(
+                controller: _passwordController,
+                onFieldSubmitted: (value) {
+                  _signInWithEmailAndPassword();
+                },
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7)),
+                ),
+                obscureText: true,
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ForgotPasswordScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                          color: highlight6, fontWeight: FontWeight.bold),
+                    )),
+              ),
+              SizedBox(height: 24.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size.fromHeight(60),
+                  backgroundColor: highlight6,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                ),
+                child: Text(
+                  'Log In',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400),
+                ),
+                onPressed: _signInWithEmailAndPassword,
+              ),
+              SizedBox(height: 12.0),
+              Divider(
+                height: 2,
+                thickness: 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Don\'t have an account?'),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUpScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        color: highlight6,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.0),
-          ],
+                ],
+              ),
+              SizedBox(height: 10.0),
+            ],
+          ),
         ),
       ),
     );

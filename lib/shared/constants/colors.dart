@@ -26,3 +26,5 @@ const Color button5 = Color(0xFF29D697);
 
 const Color success = Color.fromARGB(255, 136, 255, 136);
 const Color fail = Color.fromARGB(255, 255, 136, 136);
+
+const Color description = Color(0xFF747688);

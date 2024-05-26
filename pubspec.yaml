@@ -65,6 +65,9 @@ flutter:
     - assets/icons/backButton.png
     - assets/images/default_image.png
     - assets/logos/subscription.png
+    - assets/images/football.jpg
+    - assets/icons/EventCalendar.png
+    - assets/icons/EventLocation.png
    
 
   # An image asset can refer to one or more resolution-specific "variants", see
