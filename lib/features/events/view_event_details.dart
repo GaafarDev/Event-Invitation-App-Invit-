@@ -101,7 +101,7 @@ class EventDetailsScreen extends StatelessWidget {
             PurchaseTicketButton(
               eventId: eventData['id'],
               userId: FirebaseAuth.instance.currentUser!.uid,
-              eventPrice: eventData['ticket_price'],
+              eventPrice: eventData['ticket_price'].toDouble(),
             ),
             SizedBox(height: 15),
           ],
