@@ -39,36 +39,34 @@ class _EventSearchPageState extends State<EventSearchPage> {
                 itemCount: _suggestions.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(_suggestions[index]),
-                    onTap: () async {
-                      QuerySnapshot eventQuery = await FirebaseFirestore
-                          .instance
-                          .collection('events')
-                          .where('name', isEqualTo: _suggestions[index])
-                          .get();
+                      title: Text(_suggestions[index]),
+                      onTap: () async {
+                        QuerySnapshot eventQuery = await FirebaseFirestore
+                            .instance
+                            .collection('events')
+                            .where('name', isEqualTo: _suggestions[index])
+                            .get();
 
-                      if (eventQuery.docs.isNotEmpty) {
-                        Map<String, dynamic>? maybeMap = eventQuery.docs.first
-                            .data() as Map<String, dynamic>?;
-                        if (maybeMap != null) {
+                        if (eventQuery.docs.isNotEmpty) {
+                          DocumentSnapshot eventDoc = eventQuery.docs.first;
+                          Map<String, dynamic> eventData =
+                              eventDoc.data() as Map<String, dynamic>;
+                          eventData['id'] =
+                              eventDoc.id; // Add the document id to eventData
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => EventDetailsScreen(
-                                eventData: maybeMap,
+                                eventData: eventData,
                               ),
                             ),
                           );
                         } else {
-                          // Handle the situation where the map is null
+                          // Handle the situation where no event with the given name was found
                           // For example, show a dialog or a snackbar
                         }
-                      } else {
-                        // Handle the situation where no event with the given name was found
-                        // For example, show a dialog or a snackbar
-                      }
-                    },
-                  );
+                      });
                 },
               )
             // Add other filters (date range, event type) here
@@ -199,15 +197,14 @@ class _EventSearchPageState extends State<EventSearchPage> {
 
 // Define Event class
 class Event {
-  String name;
-  String type;
-  DateTime date;
+  String? name;
+  String? type;
+  DateTime? date;
 
-  Event({required this.name, required this.type, required this.date});
+  Event({this.name, this.type, this.date});
 
-  // Define fromDocument method
   static Event? fromDocument(DocumentSnapshot doc) {
-    var data = doc.data() as Map<String, dynamic>;
+    var data = doc.data() as Map<String, dynamic>?;
     if (data != null) {
       String? name = data['name'];
       String? type = data['type'];
