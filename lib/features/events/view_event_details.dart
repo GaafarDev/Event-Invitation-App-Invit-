@@ -348,13 +348,48 @@ class PurchaseTicketButton extends StatelessWidget {
   final String userId;
   final double eventPrice;
 
+  void buyTicket(BuildContext context, String eventId) async {
+    final _auth = FirebaseAuth.instance;
+    final currentUser = _auth.currentUser;
+
+    if (currentUser == null) {
+      print('No user logged in');
+      return;
+    }
+
+    // Add a new document to the participants collection
+    await FirebaseFirestore.instance.collection('participants').add({
+      'userId': currentUser.uid,
+      'eventId': eventId,
+    });
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Ticket Purchased'),
+          content: Text('You have successfully purchased the ticket.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: ElevatedButton(
-          onPressed: () {}, // Add your onPressed function here
+          onPressed: () =>
+              buyTicket(context, eventId), // Add your onPressed function here
           style: ElevatedButton.styleFrom(
             backgroundColor: button1, // Use the button1 color
             minimumSize: Size.fromHeight(60),
