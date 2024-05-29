@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePageOrg> {
         child: const Icon(Icons.add),
       ),
       backgroundColor: Colors.white,
-      bottomNavigationBar: CustomNavigationBar(
+      bottomNavigationBar: CustomNavigationBarOrg(
         onTap: onTabTapped,
       ),
     );

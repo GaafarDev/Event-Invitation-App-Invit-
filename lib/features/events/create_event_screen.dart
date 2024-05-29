@@ -85,7 +85,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Start Date & Time:'),
                   Container(
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
@@ -115,7 +114,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('End Date & Time:'),
                   Container(
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
