@@ -9,6 +9,7 @@ import 'package:invit/features/events/view_participating_event_user.dart';
 import 'package:invit/features/home/home_screen_org.dart';
 import 'package:invit/features/invitations/view_invitations.dart';
 import 'package:invit/features/profile/profile_screen.dart';
+import 'package:invit/shared/components/custom-drawer.dart';
 import 'package:invit/shared/components/custom_navigationbar.dart';
 import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
@@ -86,7 +87,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text('Invit User View'),
                 IconButton(
-                  icon: Icon(Icons.add),
+                  icon: Icon(Icons.arrow_forward),
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
@@ -95,15 +96,6 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ],
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
-                );
-              },
             ),
             actions: <Widget>[
               IconButton(
@@ -120,21 +112,15 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      drawer: CustomDrawer(),
       body: _children[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushAndRemoveUntil(
+          Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePageOrg()),
-            (Route<dynamic> route) => false,
+            MaterialPageRoute(builder: (context) => CreateEventScreen()),
           );
-          Future.delayed(Duration.zero, () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateEventScreen()),
-            );
-          });
         },
         child: const Icon(Icons.add),
       ),

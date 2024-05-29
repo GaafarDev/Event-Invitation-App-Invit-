@@ -7,6 +7,7 @@ import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_organizer_event.dart';
 import 'package:invit/features/home/home_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
+import 'package:invit/shared/components/custom-drawer.dart';
 import 'package:invit/shared/components/custom_navigationbar.dart';
 import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/components/custom_navigationbar_org.dart';
@@ -83,7 +84,7 @@ class _HomePageState extends State<HomePageOrg> {
               children: [
                 Text('Invit Organizer View'),
                 IconButton(
-                  icon: Icon(Icons.backspace),
+                  icon: Icon(Icons.arrow_back),
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
@@ -93,22 +94,13 @@ class _HomePageState extends State<HomePageOrg> {
                 ),
               ],
             ),
-            leading: IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
-                );
-              },
-            ),
             actions: <Widget>[
-              // IconButton(
-              //   icon: Icon(Icons.search),
-              //   onPressed: () {
-              //     // Your search dialog here
-              //   },
-              // ),
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  // Your search dialog here
+                },
+              ),
               TextButton(
                 child: Text('Sign Out'),
                 onPressed: _signOut,
@@ -117,6 +109,7 @@ class _HomePageState extends State<HomePageOrg> {
           ),
         ),
       ),
+      drawer: CustomDrawer(), // Add this line
       body: _children[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
@@ -129,7 +122,7 @@ class _HomePageState extends State<HomePageOrg> {
         child: const Icon(Icons.add),
       ),
       backgroundColor: Colors.white,
-      bottomNavigationBar: CustomNavigationBarOrg(
+      bottomNavigationBar: CustomNavigationBar(
         onTap: onTabTapped,
       ),
     );
