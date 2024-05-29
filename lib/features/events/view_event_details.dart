@@ -69,8 +69,11 @@ class EventDetailsScreen extends StatelessWidget {
                             EventCapacity(
                                 capacity: int.parse(
                                     eventData['max_capacity'].toString())),
-                            SizedBox(width: 20),
+                            SizedBox(width: 10),
                             EventType(type: eventData['type']),
+                            if (eventData['user_id'] ==
+                                FirebaseAuth.instance.currentUser!.uid)
+                              SharedEvent(eventData: eventData),
                           ])),
                 ),
               ],
@@ -103,7 +106,10 @@ class EventDetailsScreen extends StatelessWidget {
               userId: FirebaseAuth.instance.currentUser!.uid,
               eventPrice: eventData['ticket_price'].toDouble(),
             ),
-            SizedBox(height: 15),
+            if (eventData['user_id'] == FirebaseAuth.instance.currentUser!.uid)
+              EditEventTextButton(eventData: eventData),
+
+            SizedBox(height: 20),
           ],
         )));
   }
@@ -425,6 +431,55 @@ class PurchaseTicketButton extends StatelessWidget {
               ), // Display a right arrow
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SharedEvent extends StatelessWidget {
+  final dynamic eventData;
+
+  SharedEvent({Key? key, required this.eventData}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.share),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SendInvitationPage(eventData: eventData),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class EditEventTextButton extends StatelessWidget {
+  final Map<String, dynamic> eventData;
+
+  EditEventTextButton({required this.eventData});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditEventScreen(eventData: eventData),
+          ),
+        );
+      },
+      child: Text(
+        'Edit Event',
+        style: TextStyle(
+          decoration: TextDecoration.underline,
+          color: description,
+          fontSize: bodyText1FontSize,
         ),
       ),
     );
