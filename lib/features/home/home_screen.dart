@@ -5,9 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_organizer_event.dart';
-import 'package:invit/features/home/home_screen_org.dart';
-import 'package:invit/features/invitations/view_invitations.dart';
 import 'package:invit/features/profile/profile_screen.dart';
+import 'package:invit/shared/components/custom-drawer.dart';
 import 'package:invit/shared/components/custom_navigationbar.dart';
 import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
@@ -25,10 +24,9 @@ class _HomePageState extends State<HomePage> {
   String searchString = '';
   final List<Widget> _children = [
     Text('Home Screen'), // Replace with your actual saved screen widget
-    Text('User Event View'),
-    // OrganizerViewEventScreen(),
+    OrganizerViewEventScreen(),
     Text('Map'), // Replace with your actual saved screen widget
-    InvitationPage() // Text('Invitation'),
+    Text('Invitation'),
   ];
 
   void _signOut() async {
@@ -80,29 +78,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: AppBar(
             backgroundColor: Colors.indigoAccent,
-            title: Row(
-              children: [
-                Text('Invit User View'),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePageOrg()),
-                    );
-                  },
-                ),
-              ],
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
-                );
-              },
-            ),
+            title: Text('Home'),
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.search),
@@ -118,21 +94,15 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+      drawer: CustomDrawer(), // Add this line
       body: _children[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushAndRemoveUntil(
+          Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePageOrg()),
-            (Route<dynamic> route) => false,
+            MaterialPageRoute(builder: (context) => CreateEventScreen()),
           );
-          Future.delayed(Duration.zero, () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateEventScreen()),
-            );
-          });
         },
         child: const Icon(Icons.add),
       ),
