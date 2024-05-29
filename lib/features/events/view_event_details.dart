@@ -8,7 +8,7 @@ import 'package:invit/features/invitations/send_invitations.dart';
 class EventDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> eventData;
 
-  EventDetailsScreen({required this.eventData});
+  EventDetailsScreen({required this.eventData, required String eventId});
 
   @override
   Widget build(BuildContext context) {

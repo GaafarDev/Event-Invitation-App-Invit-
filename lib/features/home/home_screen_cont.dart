@@ -40,6 +40,7 @@ Future<List<DocumentSnapshot>> getUserEvents() async {
         return Container(
           height: MediaQuery.of(context).size.height,
         color: neutralLight4,
+        child: SingleChildScrollView(
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -65,7 +66,7 @@ Future<List<DocumentSnapshot>> getUserEvents() async {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EventDetailsScreen(eventData: snapshot.data![index].data() as Map<String, dynamic>)),
+                  MaterialPageRoute(builder: (context) => EventDetailsScreen(eventData: snapshot.data![index].data() as Map<String, dynamic>, eventId: '',)),
                 );
               },
               child: Container(
@@ -196,7 +197,7 @@ Future<List<DocumentSnapshot>> getUserEvents() async {
     ),
     ],
   ),
-  
+        )
 );
 
         }

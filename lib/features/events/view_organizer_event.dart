@@ -49,7 +49,7 @@ class _OrganizerViewEventScreenState extends State<OrganizerViewEventScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              EventDetailsScreen(eventData: data),
+                              EventDetailsScreen(eventData: data, eventId: '',),
                         ),
                       );
                     },

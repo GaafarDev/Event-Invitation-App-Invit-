@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_organizer_event.dart';
+import 'package:invit/features/events/view_user_event.dart';
 import 'package:invit/features/home/home_screen_cont.dart';
 import 'package:invit/features/home/home_screen_org.dart';
 import 'package:invit/features/invitations/view_invitations.dart';
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _children = [
     // Text('Home Screen'), // Replace with your actual saved screen widget
     HomePageContent(),
-    Text('User Event View'),
+    ViewUserEvent(),
     // OrganizerViewEventScreen(),
     Text('Map'), // Replace with your actual saved screen widget
     InvitationPage() // Text('Invitation'),
@@ -74,7 +75,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
+      appBar:  _currentIndex != 1 ? PreferredSize(
   preferredSize: Size.fromHeight(180.0),
   child: ClipRRect(
     borderRadius: BorderRadius.only(
@@ -116,16 +117,16 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
 
-                //Button to access Organiser Page
-                // IconButton(
-                //   icon: Icon(Icons.add),
-                //   onPressed: () {
-                //     Navigator.pushReplacement(
-                //       context,
-                //       MaterialPageRoute(builder: (context) => HomePageOrg()),
-                //     );
-                //   },
-                // ),
+               //Button to access Organiser Page
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePageOrg()),
+                    );
+                  },
+                ),
                 
              Container(
                     width: 60.0, // Set the width as needed
@@ -156,7 +157,7 @@ class _HomePageState extends State<HomePage> {
       ),
     ),
   ),
-),
+) :null,
       body: _children[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
