@@ -8,6 +8,7 @@ import 'package:invit/features/events/view_organizer_event.dart';
 import 'package:invit/features/home/home_screen_org.dart';
 import 'package:invit/features/invitations/view_invitations.dart';
 import 'package:invit/features/profile/profile_screen.dart';
+import 'package:invit/services/all-events-search-service.dart';
 import 'package:invit/shared/components/custom_navigationbar.dart';
 import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
@@ -107,7 +108,10 @@ class _HomePageState extends State<HomePage> {
               IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () {
-                  // Your search dialog here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EventSearchPage()),
+                  );
                 },
               ),
               TextButton(
