@@ -389,48 +389,74 @@ class PurchaseTicketButton extends StatelessWidget {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: ElevatedButton(
-          onPressed: () =>
-              buyTicket(context, eventId), // Add your onPressed function here
-          style: ElevatedButton.styleFrom(
-            backgroundColor: button1, // Use the button1 color
-            minimumSize: Size.fromHeight(60),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(7),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Buy Ticket ", // Display the ticket price
-                style: TextStyle(
-                  fontSize: 20,
-                  color: neutralLight4,
+        child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('participants')
+              .where('userId',
+                  isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+              .where('eventId', isEqualTo: eventId)
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went wrong');
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
+
+            bool hasBoughtTicket =
+                snapshot.data != null && snapshot.data!.docs.isNotEmpty;
+
+            return ElevatedButton(
+              onPressed:
+                  hasBoughtTicket ? null : () => buyTicket(context, eventId),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: button1,
+                minimumSize: Size.fromHeight(60),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7),
                 ),
               ),
-              Row(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "RM " + eventPrice.toString(), // Display the ticket price
+                    hasBoughtTicket
+                        ? "You have already purchased a ticket"
+                        : "Buy Ticket",
                     style: TextStyle(
                       fontSize: 20,
                       color: neutralLight4,
                     ),
                   ),
-                  SizedBox(width: 15),
-                  Icon(
-                    Icons.arrow_forward,
-                    color: neutralLight4,
-                  ),
+                  if (!hasBoughtTicket)
+                    Row(
+                      children: [
+                        Text(
+                          "RM " + eventPrice.toString(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: neutralLight4,
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: neutralLight4,
+                        ),
+                      ],
+                    ),
                 ],
-              ), // Display a right arrow
-            ],
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_organizer_event.dart';
+import 'package:invit/features/events/view_participating_event_user.dart';
 import 'package:invit/features/home/home_screen_org.dart';
 import 'package:invit/features/invitations/view_invitations.dart';
 import 'package:invit/features/profile/profile_screen.dart';
@@ -25,7 +26,8 @@ class _HomePageState extends State<HomePage> {
   String searchString = '';
   final List<Widget> _children = [
     Text('Home Screen'), // Replace with your actual saved screen widget
-    Text('User Event View'),
+    // Text('User Event View'),
+    UserEventListView(),
     // OrganizerViewEventScreen(),
     Text('Map'), // Replace with your actual saved screen widget
     InvitationPage() // Text('Invitation'),
