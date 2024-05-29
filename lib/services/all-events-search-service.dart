@@ -86,13 +86,20 @@ class _EventSearchPageState extends State<EventSearchPage> {
       });
       return;
     }
-    FirebaseFirestore.instance
-        .collection('events')
-        .where('name', isEqualTo: query)
-        .get()
-        .then((snapshot) {
-      List<String> suggestions =
-          snapshot.docs.map((doc) => doc.data()['name'] as String).toList();
+    FirebaseFirestore.instance.collection('events').get().then((snapshot) {
+      List<String> suggestions = snapshot.docs
+          .map((doc) {
+            String name = doc.data()['name'] as String;
+            // Convert both the name and the query to lower case before comparing
+            if (name.toLowerCase().contains(query.toLowerCase())) {
+              return name;
+            } else {
+              return null;
+            }
+          })
+          .where((name) => name != null)
+          .cast<String>()
+          .toList();
       setState(() {
         _suggestions = suggestions;
       });
@@ -165,7 +172,7 @@ class _EventSearchPageState extends State<EventSearchPage> {
   }
 
   void _applyFilters() {
-    String eventName = _searchController.text;
+    String eventName = _searchController.text.toLowerCase();
     Query query = FirebaseFirestore.instance.collection('events');
 
     if (eventName.isNotEmpty) {
