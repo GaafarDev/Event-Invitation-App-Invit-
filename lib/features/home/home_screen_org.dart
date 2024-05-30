@@ -95,12 +95,12 @@ class _HomePageState extends State<HomePageOrg> {
               ],
             ),
             actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  // Your search dialog here
-                },
-              ),
+              // IconButton(
+              //   icon: Icon(Icons.search),
+              //   onPressed: () {
+              //     // Your search dialog here
+              //   },
+              // ),
               TextButton(
                 child: Text('Sign Out'),
                 onPressed: _signOut,
