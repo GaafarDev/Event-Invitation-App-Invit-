@@ -109,7 +109,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Start Date & Time:'),
                   Container(
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
@@ -139,7 +138,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('End Date & Time:'),
                   Container(
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
@@ -223,7 +221,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
               ),
               const SizedBox(height: 24.0),
               ElevatedButton(
-                child: const Text('Edit Event'),
+                child: const Text('Save Changes'),
                 onPressed: () {
                   if (_eventNameController.text.isEmpty ||
                       _eventStartDate == null ||

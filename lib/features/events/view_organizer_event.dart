@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:invit/features/events/view_event_details.dart';
+import 'package:invit/shared/constants/colors.dart';
 
 class OrganizerViewEventScreen extends StatefulWidget {
   @override
@@ -59,8 +60,8 @@ class _OrganizerViewEventScreenState extends State<OrganizerViewEventScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(
-                          color: Colors.black,
-                          width: 3,
+                          color: description,
+                          width: 1,
                         ),
                         boxShadow: [
                           BoxShadow(
@@ -83,7 +84,7 @@ class _OrganizerViewEventScreenState extends State<OrganizerViewEventScreen> {
                             )
                           else
                             Image.asset(
-                              'assets/images/default_image.png',
+                              'assets/images/football.jpg',
                               width: 100,
                               height: 100,
                             ),

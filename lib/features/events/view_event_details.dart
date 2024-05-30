@@ -389,7 +389,6 @@ class PurchaseTicketButton extends StatelessWidget {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
@@ -429,7 +428,7 @@ class PurchaseTicketButton extends StatelessWidget {
                 children: [
                   Text(
                     hasBoughtTicket
-                        ? "You have already purchased a ticket"
+                        ? "You already have a ticket"
                         : "Buy Ticket",
                     style: TextStyle(
                       fontSize: 20,

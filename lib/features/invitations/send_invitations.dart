@@ -39,7 +39,7 @@ class _SendInvitationPageState extends State<SendInvitationPage> {
       body: Column(
         children: <Widget>[
           ElevatedButton(
-            child: Text('Send Invitations'),
+            child: Text('Send Invitations'), //todo : floating button
             onPressed: () {
               userCheckStatus.forEach((userId, isChecked) {
                 if (isChecked) {
@@ -93,7 +93,8 @@ class _SendInvitationPageState extends State<SendInvitationPage> {
                           document.data() as Map<String, dynamic>;
                       final fullName = data['fullName'].toLowerCase();
                       final phoneNumber = data['phoneNo'];
-                      return fullName.contains(searchQuery.toLowerCase()) ||
+                      return fullName.contains(searchQuery
+                              .toLowerCase()) || //*get fullname and make it lowercase
                           phoneNumber.contains(searchQuery);
                     }).toList() ??
                     [];
@@ -104,7 +105,7 @@ class _SendInvitationPageState extends State<SendInvitationPage> {
                         document.data() as Map<String, dynamic>;
                     final userId = document.id;
                     return CheckboxListTile(
-                      title: Text('Full Name: ${data['fullName']}'),
+                      title: Text('${data['fullName']}'),
                       subtitle: Text('Phone No: ${data['phoneNo']}'),
                       value: userCheckStatus[userId],
                       onChanged: (bool? value) {

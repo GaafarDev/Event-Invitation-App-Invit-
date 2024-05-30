@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:invit/features/events/view_event_details.dart';
+import 'package:invit/shared/constants/colors.dart';
+import 'package:invit/shared/constants/sizes.dart';
 
 class UserEventListView extends StatefulWidget {
   @override
@@ -16,7 +18,13 @@ class _UserEventListViewState extends State<UserEventListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Events I\'m Participating In'),
+        title: Text(
+          'Events I\'m Participating In',
+          style: TextStyle(
+            fontSize: heading3FontSize,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -80,8 +88,8 @@ class _UserEventListViewState extends State<UserEventListView> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
-                            color: Colors.black,
-                            width: 3,
+                            color: description,
+                            width: 1,
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -105,7 +113,7 @@ class _UserEventListViewState extends State<UserEventListView> {
                               )
                             else
                               Image.asset(
-                                'assets/images/default_image.png',
+                                'assets/images/football.jpg',
                                 width: 100,
                                 height: 100,
                               ),

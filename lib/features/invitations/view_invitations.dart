@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:invit/shared/constants/colors.dart';
+import 'package:invit/shared/constants/sizes.dart';
 
 class InvitationPage extends StatefulWidget {
   @override
@@ -144,11 +146,19 @@ class _InvitationPageState extends State<InvitationPage> {
                   children: invitations.map((invitation) {
                     final eventData = invitation['eventData'];
                     return Card(
+                      color: Colors.white,
                       margin: EdgeInsets.all(8.0),
                       child: ListTile(
-                        title: Text('Event Name: ${eventData['name']}'),
+                        title: Text(
+                          '${eventData['name']}',
+                          style: TextStyle(
+                              fontSize: heading3FontSize,
+                              fontWeight: FontWeight.w700),
+                        ),
                         subtitle: Text(
-                            'Description: ${eventData['description']}\nStart Date: ${DateFormat('dd MMMM yyyy HH:mm').format(eventData['start_date'].toDate())}\nEnd Date: ${DateFormat('dd MMMM yyyy HH:mm').format(eventData['end_date'].toDate())}\nVenue: ${eventData['venue']}\nTicket Price: RM ${eventData['ticket_price']}\nStatus: ${invitation['invitationStatus']}'),
+                          '\nStart Date: ${DateFormat('dd MMMM yyyy HH:mm').format(eventData['start_date'].toDate())}\nEnd Date: ${DateFormat('dd MMMM yyyy HH:mm').format(eventData['end_date'].toDate())}\nVenue: ${eventData['venue']}\nTicket Price: RM ${eventData['ticket_price']}\nStatus: ${invitation['invitationStatus']}',
+                          style: TextStyle(color: description),
+                        ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
