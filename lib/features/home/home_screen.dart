@@ -9,6 +9,7 @@ import 'package:invit/features/events/view_participating_event_user.dart';
 import 'package:invit/features/home/home_screen_cont.dart';
 import 'package:invit/features/home/home_screen_org.dart';
 import 'package:invit/features/invitations/view_invitations.dart';
+import 'package:invit/features/map/map_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
 import 'package:invit/services/all-events-search-service.dart';
 import 'package:invit/shared/components/custom-drawer.dart';
@@ -33,7 +34,8 @@ class _HomePageState extends State<HomePage> {
     // Text('User Event View'),
     UserEventListView(),
     // OrganizerViewEventScreen(),
-    Text('Map'), // Replace with your actual saved screen widget
+    // Text('Map'), // Replace with your actual saved screen widget
+    MapPage(),
     InvitationPage() // Text('Invitation'),
   ];
 

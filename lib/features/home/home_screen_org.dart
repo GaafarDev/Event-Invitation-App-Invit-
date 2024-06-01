@@ -4,8 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
+import 'package:invit/features/finance/finance_screen.dart';
 import 'package:invit/features/events/view_organizer_event.dart';
 import 'package:invit/features/home/home_screen.dart';
+import 'package:invit/features/home/home_screen_cont_org.dart';
+import 'package:invit/features/map/map_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
 import 'package:invit/shared/components/custom-drawer.dart';
 import 'package:invit/shared/components/custom_navigationbar.dart';
@@ -25,10 +28,13 @@ class _HomePageState extends State<HomePageOrg> {
   int _currentIndex = 0;
   String searchString = '';
   final List<Widget> _children = [
-    Text('Org Home Screen'), // Replace with your actual saved screen widget
+    // Text('Org Home Screen'), // Replace with your actual saved screen widget
+    HomeScreenContOrg(),
     OrganizerViewEventScreen(),
-    Text('Map'), // Replace with your actual saved screen widget
-    Text('Org Finance'),
+    // Text('Map'),
+    MapPage(),
+    // Text('Org Finance'),
+    FinancePage(),
   ];
 
   void _signOut() async {
