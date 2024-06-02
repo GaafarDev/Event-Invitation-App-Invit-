@@ -204,6 +204,11 @@ class _GetSubscriptionState extends State<GetSubscription> {
     DateTime currentSubDateEnd =
         (userDoc.data() as Map<String, dynamic>)['subDateEnd'].toDate();
 
+    // If currentSubDateEnd is in the past, use the current date
+    if (currentSubDateEnd.isBefore(DateTime.now())) {
+      currentSubDateEnd = DateTime.now();
+    }
+
     // Calculate new subscription end date based on selected plan
     DateTime newSubDateEnd;
     if (selectedPlan == 'Add 1 Year') {
