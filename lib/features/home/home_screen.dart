@@ -29,14 +29,10 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   String searchString = '';
   final List<Widget> _children = [
-    // Text('Home Screen'), // Replace with your actual saved screen widget
     HomePageContent(),
-    // Text('User Event View'),
     UserEventListView(),
-    // OrganizerViewEventScreen(),
-    // Text('Map'), // Replace with your actual saved screen widget
     MapPage(),
-    InvitationPage() // Text('Invitation'),
+    InvitationPage(),
   ];
 
   void _signOut() async {
@@ -93,11 +89,48 @@ class _HomePageState extends State<HomePage> {
                 Text('Invit User View'),
                 IconButton(
                   icon: Icon(Icons.arrow_forward),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePageOrg()),
-                    );
+                  onPressed: () async {
+                    try {
+                      // Get the current user's id
+                      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+                      // Log the value of uid
+                      print('UID: $uid');
+
+                      // Get the user's document
+                      DocumentSnapshot userDoc = await FirebaseFirestore
+                          .instance
+                          .collection('users')
+                          .doc(uid)
+                          .get();
+
+                      if (!userDoc.exists) {
+                        print('User document does not exist.');
+                        return;
+                      }
+
+                      // Get the subDateEnd field
+                      DateTime subDateEnd = userDoc['subDateEnd'].toDate();
+
+                      // Compare subDateEnd with the current date
+                      if (subDateEnd.isBefore(DateTime.now())) {
+                        // If subDateEnd is in the past, navigate to GetSubscription
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GetSubscription()),
+                        );
+                      } else {
+                        // If subDateEnd is in the future, navigate to HomePageOrg
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomePageOrg()),
+                        );
+                      }
+                    } catch (e) {
+                      print('Error retrieving user document: $e');
+                    }
                   },
                 ),
               ],
@@ -124,11 +157,45 @@ class _HomePageState extends State<HomePage> {
       body: _children[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CreateEventScreen()),
-          );
+        onPressed: () async {
+          try {
+            // Get the current user's id
+            String uid = FirebaseAuth.instance.currentUser!.uid;
+
+            // Log the value of uid
+            print('UID: $uid');
+
+            // Get the user's document
+            DocumentSnapshot userDoc = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(uid)
+                .get();
+
+            if (!userDoc.exists) {
+              print('User document does not exist.');
+              return;
+            }
+
+            // Get the subDateEnd field
+            DateTime subDateEnd = userDoc['subDateEnd'].toDate();
+
+            // Compare subDateEnd with the current date
+            if (subDateEnd.isBefore(DateTime.now())) {
+              // If subDateEnd is in the past, navigate to GetSubscription
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GetSubscription()),
+              );
+            } else {
+              // If subDateEnd is in the future, navigate to HomePageOrg
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateEventScreen()),
+              );
+            }
+          } catch (e) {
+            print('Error retrieving user document: $e');
+          }
         },
         child: const Icon(Icons.add),
       ),

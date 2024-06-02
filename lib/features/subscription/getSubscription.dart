@@ -30,108 +30,110 @@ class _GetSubscriptionState extends State<GetSubscription> {
       backgroundColor: neutralLight4,
       body: Padding(
         padding: EdgeInsets.fromLTRB(16.0, 10.0, 16, 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              subscriptionTitle,
-              style: TextStyle(
-                fontSize: heading1FontSize,
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 10.0),
-            Center(
-              child: Text(
-                titleDescription,
-                textAlign: TextAlign.center,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                subscriptionTitle,
                 style: TextStyle(
-                  fontSize: bodyText2FontSize,
+                  fontSize: heading1FontSize,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-            Center(
-              child: Image.asset(
-                SubscriptionIcon,
-                width: 300,
-                height: 300,
+              SizedBox(height: 10.0),
+              Center(
+                child: Text(
+                  titleDescription,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: bodyText2FontSize,
+                  ),
+                ),
               ),
-            ),
-            SizedBox(height: 10.0),
-            _buildSubscriptionButton(
-              planName: 'Add 1 Year',
-              price: '99.99 RM For One Year',
-              duration: Duration(days: 365), // Update subscription by 1 year
-              onPressed: () => setState(() => selectedPlan = 'Add 1 Year'),
-              width: buttonWidth,
-            ),
-            SizedBox(height: 10.0),
-            _buildSubscriptionButton(
-              planName: 'Add 1 Month',
-              price: '15.99 RM For One Month',
-              duration: Duration(days: 30), // Update subscription by 1 month
-              onPressed: () => setState(() => selectedPlan = 'Add 1 Month'),
-              width: buttonWidth,
-            ),
-            SizedBox(height: 15.0),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+              Center(
+                child: Image.asset(
+                  SubscriptionIcon,
+                  width: 300,
+                  height: 300,
+                ),
               ),
-              child: Container(
-                height: 50,
-                width: buttonWidth, // Same width as subscription buttons
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: button1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              SizedBox(height: 10.0),
+              _buildSubscriptionButton(
+                planName: 'Add 1 Year',
+                price: '99.99 RM For One Year',
+                duration: Duration(days: 365), // Update subscription by 1 year
+                onPressed: () => setState(() => selectedPlan = 'Add 1 Year'),
+                width: buttonWidth,
+              ),
+              SizedBox(height: 10.0),
+              _buildSubscriptionButton(
+                planName: 'Add 1 Month',
+                price: '15.99 RM For One Month',
+                duration: Duration(days: 30), // Update subscription by 1 month
+                onPressed: () => setState(() => selectedPlan = 'Add 1 Month'),
+                width: buttonWidth,
+              ),
+              SizedBox(height: 15.0),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Container(
+                  height: 50,
+                  width: buttonWidth, // Same width as subscription buttons
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: button1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Buy Now',
-                          style: TextStyle(color: neutralLight5),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Buy Now',
+                            style: TextStyle(color: neutralLight5),
+                          ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child:
-                            Icon(Icons.arrow_forward_ios, color: neutralLight5),
-                      ),
-                    ],
-                  ),
-                  onPressed: () async {
-                    if (selectedPlan.isEmpty) {
-                      // Show error message if no plan is selected
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(Icons.arrow_forward_ios,
+                              color: neutralLight5),
+                        ),
+                      ],
+                    ),
+                    onPressed: () async {
+                      if (selectedPlan.isEmpty) {
+                        // Show error message if no plan is selected
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please select a subscription plan.'),
+                          ),
+                        );
+                        return;
+                      }
+
+                      // Update subscription due date in Firebase based on selected plan
+                      await updateSubscriptionDueDate(selectedPlan);
+
+                      // Handle successful update (optional)
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Please select a subscription plan.'),
+                          content: Text('Subscription updated successfully!'),
                         ),
                       );
-                      return;
-                    }
-
-                    // Update subscription due date in Firebase based on selected plan
-                    await updateSubscriptionDueDate(selectedPlan);
-
-                    // Handle successful update (optional)
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Subscription updated successfully!'),
-                      ),
-                    );
-                    Navigator.pop(context);
-                  },
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -196,12 +198,18 @@ class _GetSubscriptionState extends State<GetSubscription> {
     final User? user = FirebaseAuth.instance.currentUser;
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+    // Fetch current subDateEnd from Firebase
+    DocumentSnapshot userDoc =
+        await firestore.collection('users').doc(user?.uid).get();
+    DateTime currentSubDateEnd =
+        (userDoc.data() as Map<String, dynamic>)['subDateEnd'].toDate();
+
     // Calculate new subscription end date based on selected plan
     DateTime newSubDateEnd;
     if (selectedPlan == 'Add 1 Year') {
-      newSubDateEnd = DateTime.now().add(Duration(days: 365));
+      newSubDateEnd = currentSubDateEnd.add(Duration(days: 365));
     } else if (selectedPlan == 'Add 1 Month') {
-      newSubDateEnd = DateTime.now().add(Duration(days: 30));
+      newSubDateEnd = currentSubDateEnd.add(Duration(days: 30));
     } else {
       throw Exception('Invalid plan selected');
     }
