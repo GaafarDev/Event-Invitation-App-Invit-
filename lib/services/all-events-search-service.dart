@@ -25,11 +25,12 @@ class _EventSearchPageState extends State<EventSearchPage> {
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search by name',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: _showSearchPopup,
-                ),
+                hintText: "Enter event's name or description here",
+                //Got error with the _applyFilter function, so omitted it for now
+                // suffixIcon: IconButton(
+                //   icon: Icon(Icons.search),
+                //   onPressed: _showSearchPopup,
+                // ),
               ),
               onChanged: _updateSuggestions,
             ),
@@ -84,7 +85,11 @@ class _EventSearchPageState extends State<EventSearchPage> {
       });
       return;
     }
-    FirebaseFirestore.instance.collection('events').get().then((snapshot) {
+    FirebaseFirestore.instance
+        .collection('events')
+        .where('type', isEqualTo: 'public')
+        .get()
+        .then((snapshot) {
       List<String> suggestions = snapshot.docs
           .map((doc) {
             String name = doc.data()['name'] as String;
