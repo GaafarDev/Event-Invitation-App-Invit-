@@ -1,3 +1,4 @@
+//lib\features\home\home_screen_org.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,8 +18,9 @@ import 'package:invit/shared/components/custom_navigationbar_org.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 
 class HomePageOrg extends StatefulWidget {
-  const HomePageOrg({Key? key}) : super(key: key);
-
+  const HomePageOrg({Key? key, required bool isOrganizerView})
+      : super(key: key);
+  final bool isOrganizerView = true;
   @override
   State<HomePageOrg> createState() => _HomePageState();
 }
@@ -86,20 +88,6 @@ class _HomePageState extends State<HomePageOrg> {
           ),
           child: AppBar(
             backgroundColor: Colors.indigoAccent,
-            title: Row(
-              children: [
-                Text('Invit Organizer View'),
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  },
-                ),
-              ],
-            ),
             actions: <Widget>[
               // IconButton(
               //   icon: Icon(Icons.search),
@@ -115,7 +103,7 @@ class _HomePageState extends State<HomePageOrg> {
           ),
         ),
       ),
-      drawer: CustomDrawer(), // Add this line
+      drawer: CustomDrawer(isOrganizerView: widget.isOrganizerView),
       body: _children[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
