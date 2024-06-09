@@ -6,10 +6,8 @@ import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_organizer_event.dart';
 import 'package:invit/features/events/view_participating_event_user.dart';
-import 'package:invit/features/home/home_screen_cont.dart';
 import 'package:invit/features/home/home_screen_org.dart';
 import 'package:invit/features/invitations/view_invitations.dart';
-import 'package:invit/features/map/map_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
 import 'package:invit/services/all-events-search-service.dart';
 import 'package:invit/shared/components/custom-drawer.dart';
@@ -29,10 +27,12 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   String searchString = '';
   final List<Widget> _children = [
-    HomePageContent(),
+    Text('Home Screen'), // Replace with your actual saved screen widget
+    // Text('User Event View'),
     UserEventListView(),
-    MapPage(),
-    InvitationPage(),
+    // OrganizerViewEventScreen(),
+    Text('Map'), // Replace with your actual saved screen widget
+    InvitationPage() // Text('Invitation'),
   ];
 
   void _signOut() async {
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> searchEvents(String searchString) async {
-    // Your searchEvents function here
+    // Your searchEvents function here boy
   }
 
   @override
@@ -89,48 +89,11 @@ class _HomePageState extends State<HomePage> {
                 Text('Invit User View'),
                 IconButton(
                   icon: Icon(Icons.arrow_forward),
-                  onPressed: () async {
-                    try {
-                      // Get the current user's id
-                      String uid = FirebaseAuth.instance.currentUser!.uid;
-
-                      // Log the value of uid
-                      print('UID: $uid');
-
-                      // Get the user's document
-                      DocumentSnapshot userDoc = await FirebaseFirestore
-                          .instance
-                          .collection('users')
-                          .doc(uid)
-                          .get();
-
-                      if (!userDoc.exists) {
-                        print('User document does not exist.');
-                        return;
-                      }
-
-                      // Get the subDateEnd field
-                      DateTime subDateEnd = userDoc['subDateEnd'].toDate();
-
-                      // Compare subDateEnd with the current date
-                      if (subDateEnd.isBefore(DateTime.now())) {
-                        // If subDateEnd is in the past, navigate to GetSubscription
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => GetSubscription()),
-                        );
-                      } else {
-                        // If subDateEnd is in the future, navigate to HomePageOrg
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomePageOrg()),
-                        );
-                      }
-                    } catch (e) {
-                      print('Error retrieving user document: $e');
-                    }
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePageOrg()),
+                    );
                   },
                 ),
               ],
@@ -157,45 +120,11 @@ class _HomePageState extends State<HomePage> {
       body: _children[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            // Get the current user's id
-            String uid = FirebaseAuth.instance.currentUser!.uid;
-
-            // Log the value of uid
-            print('UID: $uid');
-
-            // Get the user's document
-            DocumentSnapshot userDoc = await FirebaseFirestore.instance
-                .collection('users')
-                .doc(uid)
-                .get();
-
-            if (!userDoc.exists) {
-              print('User document does not exist.');
-              return;
-            }
-
-            // Get the subDateEnd field
-            DateTime subDateEnd = userDoc['subDateEnd'].toDate();
-
-            // Compare subDateEnd with the current date
-            if (subDateEnd.isBefore(DateTime.now())) {
-              // If subDateEnd is in the past, navigate to GetSubscription
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GetSubscription()),
-              );
-            } else {
-              // If subDateEnd is in the future, navigate to HomePageOrg
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CreateEventScreen()),
-              );
-            }
-          } catch (e) {
-            print('Error retrieving user document: $e');
-          }
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateEventScreen()),
+          );
         },
         child: const Icon(Icons.add),
       ),
