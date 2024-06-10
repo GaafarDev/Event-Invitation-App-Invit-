@@ -13,7 +13,7 @@ import 'package:invit/shared/constants/sizes.dart';
 class EventDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> eventData;
 
-  EventDetailsScreen({required this.eventData});
+  EventDetailsScreen({required this.eventData, required String eventId});
 
   @override
   Widget build(BuildContext context) {

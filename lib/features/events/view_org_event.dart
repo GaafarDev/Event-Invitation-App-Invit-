@@ -5,12 +5,12 @@ import 'package:invit/features/events/view_event_details.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 import 'package:invit/shared/constants/colors.dart';
 
-class UserEventListView extends StatefulWidget {
+class ViewOrgEvent extends StatefulWidget {
   @override
-  _UserEventListViewState createState() => _UserEventListViewState();
+  _ViewOrgEventState createState() => _ViewOrgEventState();
 }
 
-class _UserEventListViewState extends State<UserEventListView> {
+class _ViewOrgEventState extends State<ViewOrgEvent> {
   Future<Map<String, List<DocumentSnapshot>>> getUserEvents() async {
     QuerySnapshot eventSnapshot = await FirebaseFirestore.instance
         .collection('events')

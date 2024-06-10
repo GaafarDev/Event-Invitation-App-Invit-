@@ -4,29 +4,35 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
-import 'package:invit/features/events/view_organizer_event.dart';
+import 'package:invit/features/events/view_org_event.dart';
 import 'package:invit/features/home/home_screen.dart';
+import 'package:invit/features/home/home_screen_cont.dart';
+import 'package:invit/features/home/home_screen_org.dart';
+import 'package:invit/features/home/home_screen_org_cont.dart';
+import 'package:invit/features/invitations/view_invitations.dart';
 import 'package:invit/features/profile/profile_screen.dart';
+import 'package:invit/features/services/all-events-search-service.dart';
 import 'package:invit/shared/components/custom-drawer.dart';
 import 'package:invit/shared/components/custom_navigationbar.dart';
 import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/components/custom_navigationbar_org.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
+import 'package:invit/shared/constants/colors.dart';
 
 class HomePageOrg extends StatefulWidget {
   const HomePageOrg({Key? key}) : super(key: key);
 
   @override
-  State<HomePageOrg> createState() => _HomePageState();
+  State<HomePageOrg> createState() => _HomePageOrgState();
 }
 
-class _HomePageState extends State<HomePageOrg> {
+class _HomePageOrgState extends State<HomePageOrg> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
   String searchString = '';
   final List<Widget> _children = [
-    Text('Org Home Screen'), // Replace with your actual saved screen widget
-    OrganizerViewEventScreen(),
+    HomePageOrgContent(), // Replace with your actual saved screen widget
+    ViewOrgEvent(),
     Text('Map'), // Replace with your actual saved screen widget
     Text('Org Finance'),
   ];
@@ -63,61 +69,91 @@ class _HomePageState extends State<HomePageOrg> {
     });
   }
 
-  Future<void> searchEvents(String searchString) async {
-    // Your searchEvents function here
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(200.0),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(40),
-            ),
-          ),
-          child: AppBar(
-            backgroundColor: Colors.indigoAccent,
-            title: Row(
-              children: [
-                Text('Invit Organizer View'),
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  },
+      appBar: _currentIndex != 1
+          ? PreferredSize(
+              preferredSize: Size.fromHeight(65.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(18),
+                  bottomRight: Radius.circular(18),
                 ),
-              ],
-            ),
-            actions: <Widget>[
-              // IconButton(
-              //   icon: Icon(Icons.search),
-              //   onPressed: () {
-              //     // Your search dialog here
-              //   },
-              // ),
-              TextButton(
-                child: Text('Sign Out'),
-                onPressed: _signOut,
+                child: AppBar(
+                  backgroundColor: button1,
+                  flexibleSpace: SafeArea(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 150.0, top: 10.0), 
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: <Widget>[
+                                  Center(
+                                    child: Text(
+                                      'Invit Organizer View',
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.add),
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => HomePage()),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.search, color: Colors.white),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => EventSearchPage()),
+                                  );
+                                },
+                              ),
+                              SizedBox(width: 10.0),
+                              TextButton(
+                                style: TextButton.styleFrom(),
+                                onPressed: _signOut,
+                                child: Icon(
+                                  Icons.logout,
+                                  color: Colors.white,
+                                  size: 30.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
-      drawer: CustomDrawer(), // Add this line
+            )
+          : null,
+      drawer: CustomDrawer(),
       body: _children[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => CreateEventScreen()),
+            MaterialPageRoute(builder: (context) => HomePageOrg()),
+            (Route<dynamic> route) => false,
           );
+          Future.delayed(Duration.zero, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateEventScreen()),
+            );
+          });
         },
         child: const Icon(Icons.add),
       ),

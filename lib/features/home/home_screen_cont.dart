@@ -84,7 +84,7 @@ class HomePageContent extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => EventDetailsScreen(
                                 eventData: snapshot.data![index]
-                                    as Map<String, dynamic>,
+                                    as Map<String, dynamic>, eventId: '',
                               ),
                             ),
                           );
