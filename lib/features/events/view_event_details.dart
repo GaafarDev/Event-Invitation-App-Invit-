@@ -21,7 +21,7 @@ class EventDetailsScreen extends StatelessWidget {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: Text("Event Details"),
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.indigoAccent,
           iconTheme: IconThemeData(color: neutralLight4),
           titleTextStyle: TextStyle(
             color: neutralLight4,
