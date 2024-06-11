@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_organizer_event.dart';
+import 'package:invit/features/finance/finance_screen.dart';
 import 'package:invit/features/home/home_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
 import 'package:invit/shared/components/custom-drawer.dart';
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePageOrg> {
     Text('Org Home Screen'), // Replace with your actual saved screen widget
     OrganizerViewEventScreen(),
     Text('Map'), // Replace with your actual saved screen widget
-    Text('Org Finance'),
+    FinancePage(),
   ];
 
   void _signOut() async {
