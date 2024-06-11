@@ -193,50 +193,50 @@ class HomePageOrgContent extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 30),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Container(
-                      width: double.infinity,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        color: button5,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 10),
-                              Text('Get Your Subscription Today!',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                              Text('Create Your Own Event!'),
-                              SizedBox(height: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            GetSubscription()),
-                                  );
-                                },
-                                child: Text('Subscribe'),
-                              ),
-                            ],
-                          ),
-                          Icon(
-                            Icons.event_available,
-                            size: 70,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.all(10),
+                  //   child: Container(
+                  //     width: double.infinity,
+                  //     height: 130,
+                  //     decoration: BoxDecoration(
+                  //       color: button5,
+                  //       borderRadius: BorderRadius.circular(10),
+                  //     ),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //       children: [
+                  //         Column(
+                  //           crossAxisAlignment: CrossAxisAlignment.start,
+                  //           children: [
+                  //             SizedBox(height: 10),
+                  //             Text('Get Your Subscription Today!',
+                  //                 style: TextStyle(
+                  //                     fontSize: 20,
+                  //                     fontWeight: FontWeight.bold)),
+                  //             Text('Create Your Own Event!'),
+                  //             SizedBox(height: 10),
+                  //             ElevatedButton(
+                  //               onPressed: () {
+                  //                 Navigator.push(
+                  //                   context,
+                  //                   MaterialPageRoute(
+                  //                       builder: (context) =>
+                  //                           GetSubscription()),
+                  //                 );
+                  //               },
+                  //               child: Text('Subscribe'),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         Icon(
+                  //           Icons.event_available,
+                  //           size: 70,
+                  //           color: Colors.white,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
