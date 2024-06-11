@@ -29,7 +29,9 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/" route, build the FirstScreen widget.
         // When navigating to the "/second" route, build the SecondScreen widget.
 
-        '/HomePageUser': (context) => HomePage(),
+        '/HomePageUser': (context) => HomePage(
+              isOrganizerView: false,
+            ),
       },
       debugShowCheckedModeBanner: false,
       home: StreamBuilder<User?>(
@@ -37,7 +39,9 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             // User is signed in, show the home screen
-            return HomePage();
+            return HomePage(
+              isOrganizerView: false,
+            );
           } else {
             // User is not signed in, show the login screen
             return LoginScreen();

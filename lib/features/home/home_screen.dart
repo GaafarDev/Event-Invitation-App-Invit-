@@ -1,3 +1,4 @@
+// lib\features\home\home_screen.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,8 +19,8 @@ import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+  const HomePage({Key? key, required bool isOrganizerView}) : super(key: key);
+  final bool isOrganizerView = false;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int _currentIndex = 0;
   String searchString = '';
+
   final List<Widget> _children = [
     HomePageContent(),
     UserEventListView(),
@@ -84,57 +86,6 @@ class _HomePageState extends State<HomePage> {
           ),
           child: AppBar(
             backgroundColor: Colors.indigoAccent,
-            title: Row(
-              children: [
-                Text('Invit User View'),
-                IconButton(
-                  icon: Icon(Icons.arrow_forward),
-                  onPressed: () async {
-                    try {
-                      // Get the current user's id
-                      String uid = FirebaseAuth.instance.currentUser!.uid;
-
-                      // Log the value of uid
-                      print('UID: $uid');
-
-                      // Get the user's document
-                      DocumentSnapshot userDoc = await FirebaseFirestore
-                          .instance
-                          .collection('users')
-                          .doc(uid)
-                          .get();
-
-                      if (!userDoc.exists) {
-                        print('User document does not exist.');
-                        return;
-                      }
-
-                      // Get the subDateEnd field
-                      DateTime subDateEnd = userDoc['subDateEnd'].toDate();
-
-                      // Compare subDateEnd with the current date
-                      if (subDateEnd.isBefore(DateTime.now())) {
-                        // If subDateEnd is in the past, navigate to GetSubscription
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => GetSubscription()),
-                        );
-                      } else {
-                        // If subDateEnd is in the future, navigate to HomePageOrg
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomePageOrg()),
-                        );
-                      }
-                    } catch (e) {
-                      print('Error retrieving user document: $e');
-                    }
-                  },
-                ),
-              ],
-            ),
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.search),
@@ -153,7 +104,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      drawer: CustomDrawer(),
+      drawer: CustomDrawer(isOrganizerView: widget.isOrganizerView),
       body: _children[_currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(

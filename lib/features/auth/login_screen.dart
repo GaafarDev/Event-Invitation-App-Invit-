@@ -36,7 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(
+              builder: (context) => HomePage(
+                    isOrganizerView: false,
+                  )),
           // MaterialPageRoute(builder: (context) => ProfileScreen()),
         );
       } else {
