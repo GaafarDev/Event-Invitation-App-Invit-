@@ -14,6 +14,7 @@ import 'package:invit/shared/components/custom-drawer.dart';
 import 'package:invit/shared/components/custom_navigationbar.dart';
 import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
+import 'package:invit/features/MapPage/MapPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     // Text('User Event View'),
     UserEventListView(),
     // OrganizerViewEventScreen(),
-    Text('Map'), // Replace with your actual saved screen widget
+    MapPage(), // Replace with your actual saved screen widget
     InvitationPage() // Text('Invitation'),
   ];
 

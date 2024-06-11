@@ -12,6 +12,7 @@ import 'package:invit/shared/components/custom_navigationbar.dart';
 import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/components/custom_navigationbar_org.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
+import 'package:invit/features/MapPage/MapPage.dart';
 
 class HomePageOrg extends StatefulWidget {
   const HomePageOrg({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePageOrg> {
   final List<Widget> _children = [
     Text('Org Home Screen'), // Replace with your actual saved screen widget
     OrganizerViewEventScreen(),
-    Text('Map'), // Replace with your actual saved screen widget
+    MapPage(), // Replace with your actual saved screen widget
     Text('Org Finance'),
   ];
 
