@@ -39,32 +39,40 @@ class _SendInvitationPageState extends State<SendInvitationPage> {
       body: Column(
         children: <Widget>[
           ElevatedButton(
-            child: Text('Send Invitations'), //todo : floating button
-            onPressed: () {
-              userCheckStatus.forEach((userId, isChecked) {
-                if (isChecked) {
-                  sendInvitation(userId, widget.eventData['id']);
-                }
-              });
+            child: Text('Send Invitations'),
+            onPressed: () async {
+              print('Button Pressed'); // Debugging print
+              List<String> selectedUsers = userCheckStatus.entries
+                  .where((entry) => entry.value)
+                  .map((entry) => entry.key)
+                  .toList();
 
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Invitations Sent'),
-                    content: Text('Invitations have been successfully sent.'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Pop the dialog
-                          Navigator.of(context).pop(); // Pop the current page
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+              if (selectedUsers.isNotEmpty) {
+                for (String userId in selectedUsers) {
+                  await sendInvitation(userId, widget.eventData['id']);
+                }
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Invitations Sent'),
+                      content: Text('Invitations have been successfully sent.'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Pop the dialog
+                            Navigator.of(context).pop(); // Pop the current page
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                print('No users selected'); // Debugging print
+              }
             },
           ),
           Expanded(
@@ -78,7 +86,7 @@ class _SendInvitationPageState extends State<SendInvitationPage> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return Center(child: CircularProgressIndicator());
                 }
 
                 snapshot.data?.docs.forEach((doc) {
@@ -93,8 +101,7 @@ class _SendInvitationPageState extends State<SendInvitationPage> {
                           document.data() as Map<String, dynamic>;
                       final fullName = data['fullName'].toLowerCase();
                       final phoneNumber = data['phoneNo'];
-                      return fullName.contains(searchQuery
-                              .toLowerCase()) || //*get fullname and make it lowercase
+                      return fullName.contains(searchQuery.toLowerCase()) ||
                           phoneNumber.contains(searchQuery);
                     }).toList() ??
                     [];
@@ -125,14 +132,17 @@ class _SendInvitationPageState extends State<SendInvitationPage> {
   }
 }
 
-void sendInvitation(String userId, String eventId) {
-  // Get a reference to the Firestore instance
+Future<void> sendInvitation(String userId, String eventId) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // Create a new document in the 'invitations' collection
-  firestore.collection('invitations').add({
-    'userId': userId,
-    'eventId': eventId,
-    'status': 'Pending',
-  });
+  try {
+    await firestore.collection('invitations').add({
+      'userId': userId,
+      'eventId': eventId,
+      'status': 'Pending',
+    });
+    print('Invitation sent to user: $userId'); // Debugging print
+  } catch (e) {
+    print('Failed to send invitation: $e');
+  }
 }

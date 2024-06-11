@@ -7,13 +7,13 @@ import 'package:invit/features/subscription/getSubscription.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 import 'package:invit/shared/constants/colors.dart';
 
-class HomePageContent extends StatelessWidget {
+class HomePageOrgContent extends StatelessWidget {
   final User? user = FirebaseAuth.instance.currentUser;
 
   Future<List<Map<String, dynamic>>> getUserEvents() async {
     QuerySnapshot eventSnapshot = await FirebaseFirestore.instance
         .collection('events')
-        .where('type', isEqualTo: 'public')
+        .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .get();
 
     List<Map<String, dynamic>> futureEvents = eventSnapshot.docs
@@ -52,6 +52,8 @@ class HomePageContent extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No upcoming events.'));
         } else {
           return Container(
             height: MediaQuery.of(context).size.height,
@@ -64,7 +66,7 @@ class HomePageContent extends StatelessWidget {
                     padding:
                         const EdgeInsets.only(left: 20, top: 20, bottom: 20),
                     child: Text(
-                      'All Upcoming Events To Join',
+                      'Upcoming Event',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
@@ -73,37 +75,37 @@ class HomePageContent extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 255, // adjust height as needed
+                    height: 255,
                     child: ListView.separated(
                       padding: EdgeInsets.only(left: 15, right: 15, bottom: 5),
                       scrollDirection: Axis.horizontal,
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
+                        final event = snapshot.data![index];
+
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EventDetailsScreen(
-                                  eventData: snapshot.data![index],
+                                  eventData: event,
                                 ),
                               ),
                             );
                           },
                           child: Container(
                             width: 237,
-                            height: 500, // adjust width as needed
+                            height: 500,
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(
-                                  20), // adjust radius as needed
+                              borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.3),
                                   spreadRadius: 2,
                                   blurRadius: 3,
-                                  offset: Offset(
-                                      0, 3), // changes position of shadow
+                                  offset: Offset(0, 3),
                                 ),
                               ],
                             ),
@@ -114,8 +116,7 @@ class HomePageContent extends StatelessWidget {
                                 Stack(
                                   children: [
                                     ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                          20), // adjust radius as needed
+                                      borderRadius: BorderRadius.circular(20),
                                       child: Image.asset(
                                         DefaultImage,
                                         width: 200,
@@ -124,19 +125,19 @@ class HomePageContent extends StatelessWidget {
                                       ),
                                     ),
                                     Positioned(
-                                      top: 10, // adjust as needed
-                                      left: 10, // adjust as needed
+                                      top: 10,
+                                      left: 10,
                                       child: Container(
                                         padding: EdgeInsets.all(5),
                                         decoration: BoxDecoration(
                                           color: Colors.orange.withOpacity(0.5),
-                                          borderRadius: BorderRadius.circular(
-                                              10), // adjust radius as needed
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Text(
-                                          DateFormat('dd/MM').format(snapshot
-                                              .data?[index]['start_date']
-                                              .toDate()),
+                                          DateFormat('dd/MM').format(
+                                            event['start_date'].toDate(),
+                                          ),
                                           style: TextStyle(fontSize: 15),
                                         ),
                                       ),
@@ -154,7 +155,7 @@ class HomePageContent extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            snapshot.data?[index]['name'],
+                                            event['name'],
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                             style: TextStyle(
@@ -166,14 +167,11 @@ class HomePageContent extends StatelessWidget {
                                               Icon(
                                                 Icons.location_pin,
                                                 color: Colors.grey,
-                                              ), // this is the location icon
-                                              SizedBox(
-                                                  width:
-                                                      5), // add some space between the icon and the text
+                                              ),
+                                              SizedBox(width: 5),
                                               Flexible(
                                                 child: Text(
-                                                  snapshot.data?[index]
-                                                      ['venue'],
+                                                  event['venue'],
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   maxLines: 1,
@@ -196,14 +194,13 @@ class HomePageContent extends StatelessWidget {
                   ),
                   SizedBox(height: 30),
                   Padding(
-                    padding: EdgeInsets.all(10), // adjust as needed
+                    padding: EdgeInsets.all(10),
                     child: Container(
-                      width: double.infinity, // take full width
-                      height: 130, // adjust as needed
+                      width: double.infinity,
+                      height: 130,
                       decoration: BoxDecoration(
-                        color: button5, // adjust color as needed
-                        borderRadius: BorderRadius.circular(
-                            10), // adjust radius as needed
+                        color: button5,
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -232,10 +229,9 @@ class HomePageContent extends StatelessWidget {
                             ],
                           ),
                           Icon(
-                            Icons
-                                .event_available, // replace with your desired icon
-                            size: 70, // adjust as needed
-                            color: Colors.white, // adjust color as needed
+                            Icons.event_available,
+                            size: 70,
+                            color: Colors.white,
                           ),
                         ],
                       ),

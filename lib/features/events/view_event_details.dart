@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:invit/features/events/edit_event_details.dart';
 import 'package:invit/features/invitations/send_invitations.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
@@ -18,19 +18,19 @@ class EventDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          title: Text("Event Details"),
-          backgroundColor: Colors.indigoAccent,
-          iconTheme: IconThemeData(color: neutralLight4),
-          titleTextStyle: TextStyle(
-            color: neutralLight4,
-            fontSize: heading2FontSize,
-          ),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text("Event Details"),
+        backgroundColor: button1,
+        iconTheme: IconThemeData(color: neutralLight4),
+        titleTextStyle: TextStyle(
+          color: neutralLight4,
+          fontSize: heading2FontSize,
         ),
-        backgroundColor: neutralLight4,
-        body: SingleChildScrollView(
-            child: Column(
+      ),
+      backgroundColor: neutralLight4,
+      body: SingleChildScrollView(
+        child: Column(
           children: [
             Stack(
               clipBehavior: Clip.none,
@@ -43,75 +43,83 @@ class EventDetailsScreen extends StatelessWidget {
                   right: 40,
                   bottom: -30, // half the height of the container
                   child: Container(
-                      width: 300, // specify the width
-                      height: 60, // specify the height
-                      decoration: BoxDecoration(
-                        color: neutralLight4, // specify the color
-                        borderRadius: BorderRadius.horizontal(
-                          left: Radius.circular(
-                              30), // specify the radius for the left side
-                          right: Radius.circular(
-                              30), // specify the radius for the right side
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 0, 0, 0)
-                                .withOpacity(0.25),
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            offset: Offset(0, 4), // changes position of shadow
-                          ),
-                        ],
+                    width: 300, // specify the width
+                    height: 60, // specify the height
+                    decoration: BoxDecoration(
+                      color: neutralLight4, // specify the color
+                      borderRadius: BorderRadius.horizontal(
+                        left: Radius.circular(
+                            30), // specify the radius for the left side
+                        right: Radius.circular(
+                            30), // specify the radius for the right side
                       ),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            EventCapacity(
-                                capacity: int.parse(
-                                    eventData['max_capacity'].toString())),
-                            SizedBox(width: 10),
-                            EventType(type: eventData['type']),
-                            if (eventData['user_id'] ==
-                                FirebaseAuth.instance.currentUser!.uid)
-                              SharedEvent(eventData: eventData),
-                          ])),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color.fromARGB(255, 0, 0, 0)
+                              .withOpacity(0.25),
+                          spreadRadius: 2,
+                          blurRadius: 10,
+                          offset: Offset(0, 4), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        EventCapacity(
+                            capacity: int.parse(
+                                eventData['max_capacity'].toString())),
+                        SizedBox(width: 10),
+                        EventType(type: eventData['type']),
+                        if (eventData['user_id'] ==
+                            FirebaseAuth.instance.currentUser!.uid)
+                          SharedEvent(eventData: eventData),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-
             SizedBox(height: 35),
-            //Title
+            // Title
             EventTitle(
-              title: eventData["name"],
+              title:
+                  eventData["name"] ?? 'No Title', // Use default value if null
             ),
             SizedBox(height: 30),
-            //Date
+            // Date
             EventDate(
               startDate: eventData['start_date'],
               endDate: eventData['end_date'],
             ),
             SizedBox(height: 10),
-            //venue
+            // Venue
             EventVenue(
-              venue: eventData['venue'],
+              venue:
+                  eventData['venue'] ?? 'No Venue', // Use default value if null
             ),
             SizedBox(height: 15),
-            //Description
+            // Description
             EventDescription(
-              desc: eventData['description'],
+              desc: eventData['description'] ??
+                  'No Description', // Use default value if null
             ),
             SizedBox(height: 100),
             PurchaseTicketButton(
-              eventId: eventData['id'],
+              eventId: eventData['id'] ??
+                  '', // Provide a default value if id is null
               userId: FirebaseAuth.instance.currentUser!.uid,
-              eventPrice: eventData['ticket_price'].toDouble(),
+              eventPrice: (eventData['ticket_price'] != null)
+                  ? eventData['ticket_price'].toDouble()
+                  : 0.0,
             ),
             if (eventData['user_id'] == FirebaseAuth.instance.currentUser!.uid)
               EditEventTextButton(eventData: eventData),
-
             SizedBox(height: 20),
           ],
-        )));
+        ),
+      ),
+    );
   }
 }
 

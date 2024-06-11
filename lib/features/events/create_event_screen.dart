@@ -17,7 +17,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   DateTime _eventStartDate = DateTime.now();
   DateTime _eventEndDate = DateTime.now().add(Duration(hours: 1));
   final TextEditingController _eventMaxCapacityController =
-      TextEditingController();
+      TextEditingController(text: '10');
   final TextEditingController _ticketPriceController =
       TextEditingController(text: '0.00');
   final TextEditingController _venueController = TextEditingController();

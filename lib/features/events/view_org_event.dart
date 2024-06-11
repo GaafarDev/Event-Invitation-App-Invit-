@@ -6,12 +6,12 @@ import 'package:invit/features/events/view_event_details.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 import 'package:invit/shared/constants/colors.dart';
 
-class UserEventListView extends StatefulWidget {
+class ViewOrgEvent extends StatefulWidget {
   @override
-  _UserEventListViewState createState() => _UserEventListViewState();
+  _ViewOrgEventState createState() => _ViewOrgEventState();
 }
 
-class _UserEventListViewState extends State<UserEventListView> {
+class _ViewOrgEventState extends State<ViewOrgEvent> {
   Future<Map<String, List<DocumentSnapshot>>> getUserEvents() async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
 
@@ -19,30 +19,24 @@ class _UserEventListViewState extends State<UserEventListView> {
       throw Exception('No user is currently logged in.');
     }
 
-    QuerySnapshot participantSnapshot = await FirebaseFirestore.instance
-        .collection('participants')
-        .where('userId', isEqualTo: userId)
+    QuerySnapshot eventSnapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .where('user_id', isEqualTo: userId)
         .get();
 
     List<DocumentSnapshot> futureEvents = [];
     List<DocumentSnapshot> pastEvents = [];
 
-    for (var participantDoc in participantSnapshot.docs) {
-      String eventId = participantDoc['eventId'];
-      DocumentSnapshot eventDoc = await FirebaseFirestore.instance
-          .collection('events')
-          .doc(eventId)
-          .get();
+    for (var doc in eventSnapshot.docs) {
+      Map<String, dynamic> eventData = doc.data() as Map<String, dynamic>;
+      eventData['id'] = doc.id; // Add 'id' attribute to the event data
 
-      Map<String, dynamic> eventData = eventDoc.data() as Map<String, dynamic>;
-      eventData['id'] = eventDoc.id; // Add 'id' attribute to the event data
-
-      Timestamp timestamp = eventDoc['start_date'];
+      Timestamp timestamp = doc['start_date'];
       DateTime startDate = timestamp.toDate();
       if (startDate.isAfter(DateTime.now())) {
-        futureEvents.add(eventDoc);
+        futureEvents.add(doc);
       } else {
-        pastEvents.add(eventDoc);
+        pastEvents.add(doc);
       }
     }
 
@@ -71,7 +65,7 @@ class _UserEventListViewState extends State<UserEventListView> {
                       left: 10.0,
                       bottom: 10.0), // adjust the padding as needed
                   child: Text(
-                    'My Participating Events',
+                    'My Organized Events',
                     style: TextStyle(
                       fontSize: 30,
                     ),
