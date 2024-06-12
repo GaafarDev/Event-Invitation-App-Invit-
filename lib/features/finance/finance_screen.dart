@@ -35,8 +35,6 @@ class _FinancePageState extends State<FinancePage> {
     "Dec"
   ];
   final List<String> weeks = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
-  final String organizerUserId =
-      "St290D1fYyZP6XcJZdYeC0e4boY2"; // Replace with actual organizer user ID
 
   @override
   void initState() {
@@ -159,9 +157,7 @@ class _FinancePageState extends State<FinancePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text('Finance Page', style: Theme.of(context).textTheme.headline6),
-        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('Finance Page'),
       ),
       body: (yearlyDataPoints.isEmpty ||
               monthlyDataPoints.isEmpty ||
@@ -183,19 +179,19 @@ class _FinancePageState extends State<FinancePage> {
                         },
                         children: <Widget>[
                           _buildPage(
-                              'Monthly Sales',
+                              'Monthly Earning',
                               _MonthlyLineChart(
                                   isShowingMainData: isShowingMainData,
                                   dataPoints: monthlyDataPoints,
                                   months: months)),
                           _buildPage(
-                              'Weekly Sales',
+                              'Weekly Earning',
                               _WeeklyLineChart(
                                   isShowingMainData: isShowingMainData,
                                   dataPoints: weeklyDataPoints,
                                   weeks: weeks)),
                           _buildPage(
-                              'Yearly Sales',
+                              'Yearly Earning',
                               _YearlyLineChart(
                                   isShowingMainData: isShowingMainData,
                                   dataPoints: yearlyDataPoints)),
@@ -273,7 +269,7 @@ class _FinancePageState extends State<FinancePage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            'Total Earnings: \$${totalEarnings.toStringAsFixed(2)}',
+            'Total Earnings: \RM${totalEarnings.toStringAsFixed(2)}',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
