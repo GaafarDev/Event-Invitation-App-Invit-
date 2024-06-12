@@ -49,6 +49,7 @@ class _GetSubscriptionState extends State<GetSubscription> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: bodyText2FontSize,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -160,14 +161,12 @@ class _GetSubscriptionState extends State<GetSubscription> {
         style: TextButton.styleFrom(
           minimumSize:
               Size(width, 50.0), // Set minimum size for consistent width
-          maximumSize:
-              Size(width, 50.0), // Set maximum size for consistent width
+          backgroundColor: selectedPlan == planName ? button1 : highlight7,
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
-            // Change Column to Row for horizontal layout
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space evenly
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
                 planName,
