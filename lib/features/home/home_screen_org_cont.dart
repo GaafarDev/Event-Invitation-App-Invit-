@@ -1,10 +1,8 @@
-import 'dart:ui';
-
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
 import 'package:invit/features/auth/login_screen.dart';
 import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_event_details.dart';
@@ -167,42 +165,53 @@ class HomePageOrgContent extends StatelessWidget {
 
     List<Map<String, dynamic>> futureEvents = eventSnapshot.docs
         .map((QueryDocumentSnapshot doc) {
-          // Cast the return value of doc.data() to Map<String, dynamic>
           Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
 
-          // Check if data is null or doesn't contain the expected structure
           if (data == null || !data.containsKey('start_date')) {
-            return null; // Return null if data is invalid
+            return null;
           }
 
-          // Add id to data
           data['id'] = doc.id;
-
-          // Convert start_date to DateTime
           Timestamp timestamp = data['start_date'] as Timestamp;
           DateTime startDate = timestamp.toDate();
 
-          // Return data only if start_date is after current time
           return startDate.isAfter(DateTime.now()) ? data : null;
         })
-        .where((data) => data != null) // Remove null elements from the list
-        .map((data) => data as Map<String, dynamic>) // Cast null-safe maps
+        .where((data) => data != null)
+        .map((data) => data as Map<String, dynamic>)
         .toList();
 
     return futureEvents;
   }
 
+  Future<double> getTotalEarnings() async {
+    double totalEarnings = 0.0;
+    List<Map<String, dynamic>> events = await getUserEvents();
+
+    for (var event in events) {
+      QuerySnapshot participantsSnapshot = await FirebaseFirestore.instance
+          .collection('participants')
+          .where('eventId', isEqualTo: event['id'])
+          .get();
+
+      int participantCount = participantsSnapshot.docs.length;
+      double eventEarnings =
+          participantCount * (event['ticket_price'] as num).toDouble();
+      totalEarnings += eventEarnings;
+    }
+
+    return totalEarnings;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getUserEvents(),
+    return FutureBuilder<double>(
+      future: getTotalEarnings(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No upcoming events.'));
         } else {
           return Container(
             height: MediaQuery.of(context).size.height,
@@ -211,7 +220,9 @@ class HomePageOrgContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  EarningsCard(), // Add the EarningsCard here
+                  EarningsCard(
+                      totalEarnings:
+                          snapshot.data ?? 0.0), // Pass totalEarnings here
                   Padding(
                     padding: EdgeInsets.only(left: 20, top: 20, bottom: 20),
                     child: Text(
@@ -225,120 +236,141 @@ class HomePageOrgContent extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 255,
-                    child: ListView.separated(
-                      padding: EdgeInsets.only(left: 15, right: 15, bottom: 5),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        final event = snapshot.data![index];
+                    child: FutureBuilder<List<Map<String, dynamic>>>(
+                      future: getUserEvents(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return Center(child: Text('No upcoming events.'));
+                        } else {
+                          return ListView.separated(
+                            padding:
+                                EdgeInsets.only(left: 15, right: 15, bottom: 5),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              final event = snapshot.data![index];
 
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EventDetailsScreen(
-                                  eventData: event,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: 237,
-                            height: 500,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 2,
-                                  blurRadius: 3,
-                                  offset: Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            padding: EdgeInsets.only(
-                                top: 20, left: 20, right: 20, bottom: 0),
-                            child: Column(
-                              children: [
-                                Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: Image.asset(
-                                        DefaultImage,
-                                        width: 200,
-                                        height: 150,
-                                        fit: BoxFit.cover,
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EventDetailsScreen(
+                                        eventData: event,
                                       ),
                                     ),
-                                    Positioned(
-                                      top: 10,
-                                      left: 10,
-                                      child: Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          color: Colors.orange.withOpacity(0.5),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Text(
-                                          DateFormat('dd/MM').format(
-                                            event['start_date'].toDate(),
-                                          ),
-                                          style: TextStyle(fontSize: 15),
-                                        ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 237,
+                                  height: 500,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        spreadRadius: 2,
+                                        blurRadius: 3,
+                                        offset: Offset(0, 3),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 20),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                    ],
+                                  ),
+                                  padding: EdgeInsets.only(
+                                      top: 20, left: 20, right: 20, bottom: 0),
+                                  child: Column(
+                                    children: [
+                                      Stack(
                                         children: [
-                                          Text(
-                                            event['name'],
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: Image.asset(
+                                              DefaultImage,
+                                              width: 200,
+                                              height: 150,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                Icons.location_pin,
-                                                color: Colors.grey,
+                                          Positioned(
+                                            top: 10,
+                                            left: 10,
+                                            child: Container(
+                                              padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                color: Colors.orange
+                                                    .withOpacity(0.5),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                               ),
-                                              SizedBox(width: 5),
-                                              Flexible(
-                                                child: Text(
-                                                  event['venue'],
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
+                                              child: Text(
+                                                DateFormat('dd/MM').format(
+                                                  event['start_date'].toDate(),
                                                 ),
+                                                style: TextStyle(fontSize: 15),
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(height: 20),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  event['name'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.location_pin,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                    Flexible(
+                                                      child: Text(
+                                                        event['venue'],
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 1,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
+                              );
+                            },
+                            separatorBuilder: (context, index) =>
+                                SizedBox(width: 20),
+                          );
+                        }
                       },
-                      separatorBuilder: (context, index) => SizedBox(width: 20),
                     ),
                   ),
                   SizedBox(height: 30),
@@ -353,6 +385,10 @@ class HomePageOrgContent extends StatelessWidget {
 }
 
 class EarningsCard extends StatefulWidget {
+  final double totalEarnings;
+
+  EarningsCard({required this.totalEarnings});
+
   @override
   _EarningsCardState createState() => _EarningsCardState();
 }
@@ -416,7 +452,7 @@ class _EarningsCardState extends State<EarningsCard> {
             ),
             SizedBox(height: 8.0),
             Text(
-              'RM100.00', // This will be dynamically updated from Firebase
+              'RM${widget.totalEarnings.toStringAsFixed(2)}',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
