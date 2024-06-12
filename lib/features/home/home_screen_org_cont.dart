@@ -184,9 +184,34 @@ class HomePageOrgContent extends StatelessWidget {
     return futureEvents;
   }
 
+  Future<List<Map<String, dynamic>>> getAllEvents() async {
+    QuerySnapshot eventSnapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .where('user_id', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get();
+
+    List<Map<String, dynamic>> allEvents = eventSnapshot.docs
+        .map((QueryDocumentSnapshot doc) {
+          Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+
+          if (data == null || !data.containsKey('start_date')) {
+            return null;
+          }
+
+          data['id'] = doc.id;
+
+          return data; // Return all events, regardless of their start date
+        })
+        .where((data) => data != null)
+        .map((data) => data as Map<String, dynamic>)
+        .toList();
+
+    return allEvents;
+  }
+
   Future<double> getTotalEarnings() async {
     double totalEarnings = 0.0;
-    List<Map<String, dynamic>> events = await getUserEvents();
+    List<Map<String, dynamic>> events = await getAllEvents();
 
     for (var event in events) {
       QuerySnapshot participantsSnapshot = await FirebaseFirestore.instance
