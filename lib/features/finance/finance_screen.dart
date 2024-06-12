@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class FinancePage extends StatefulWidget {
   const FinancePage({super.key});
@@ -12,11 +15,32 @@ class _FinancePageState extends State<FinancePage> {
   int _pageIndex = 0;
   late PageController _pageController;
   bool isShowingMainData = true;
+  List<FlSpot> yearlyDataPoints = [];
+  List<FlSpot> monthlyDataPoints = [];
+  List<FlSpot> weeklyDataPoints = [];
+  List<Map<String, dynamic>> eventEarnings = [];
+  double totalEarnings = 0.0;
+  final List<String> months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+  final List<String> weeks = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _pageIndex);
+    fetchOrganizerUserId();
   }
 
   @override
@@ -25,35 +49,161 @@ class _FinancePageState extends State<FinancePage> {
     super.dispose();
   }
 
+  Future<void> fetchOrganizerUserId() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String organizerUserId = user.uid;
+      print('Logged in user ID: $organizerUserId');
+      fetchDataFromFirestore(organizerUserId);
+    } else {
+      print('No user is currently logged in.');
+    }
+  }
+
+  Future<void> fetchDataFromFirestore(String organizerUserId) async {
+    print('Fetching events for organizer with user_id: $organizerUserId');
+    QuerySnapshot eventsSnapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .where('user_id', isEqualTo: organizerUserId)
+        .get();
+
+    List<FlSpot> fetchedYearlyDataPoints = [];
+    List<FlSpot> fetchedMonthlyDataPoints = [];
+    List<FlSpot> fetchedWeeklyDataPoints = [];
+    Map<int, double> yearlyEarnings = {};
+    Map<int, double> monthlyEarnings = {};
+    Map<int, double> weeklyEarnings = {};
+    List<Map<String, dynamic>> eventEarningsList = [];
+    double totalEarningsCalc = 0.0;
+
+    print('Events fetched: ${eventsSnapshot.docs.length}');
+    for (var eventDoc in eventsSnapshot.docs) {
+      var eventData = eventDoc.data() as Map<String, dynamic>;
+      double ticketPrice = (eventData['ticket_price'] as num).toDouble();
+      DateTime startDate = (eventData['start_date'] as Timestamp).toDate();
+      String eventId = eventDoc.id;
+      int monthIndex = startDate.month - 1;
+      int weekIndex = ((startDate.day - 1) / 7).floor();
+      int yearIndex = startDate.year;
+
+      print(
+          'Processing event: $eventId, Start date: $startDate, Month index: $monthIndex, Week index: $weekIndex, Ticket price: $ticketPrice');
+
+      QuerySnapshot participantsSnapshot = await FirebaseFirestore.instance
+          .collection('participants')
+          .where('eventId', isEqualTo: eventId)
+          .get();
+
+      int participantCount = participantsSnapshot.docs.length;
+      double earnings = ticketPrice * participantCount;
+
+      print(
+          'Event: $eventId, Participants: $participantCount, Earnings: $earnings');
+
+      eventEarningsList.add({
+        'eventName': eventData['name'],
+        'earnings': earnings,
+        'startDate': startDate,
+      });
+
+      if (yearlyEarnings.containsKey(yearIndex)) {
+        yearlyEarnings[yearIndex] = yearlyEarnings[yearIndex]! + earnings;
+      } else {
+        yearlyEarnings[yearIndex] = earnings;
+      }
+
+      if (monthlyEarnings.containsKey(monthIndex)) {
+        monthlyEarnings[monthIndex] = monthlyEarnings[monthIndex]! + earnings;
+      } else {
+        monthlyEarnings[monthIndex] = earnings;
+      }
+
+      if (weeklyEarnings.containsKey(weekIndex)) {
+        weeklyEarnings[weekIndex] = weeklyEarnings[weekIndex]! + earnings;
+      } else {
+        weeklyEarnings[weekIndex] = earnings;
+      }
+
+      totalEarningsCalc += earnings;
+    }
+
+    yearlyEarnings.forEach((yearIndex, earnings) {
+      fetchedYearlyDataPoints.add(FlSpot(yearIndex.toDouble(), earnings));
+    });
+
+    monthlyEarnings.forEach((monthIndex, earnings) {
+      fetchedMonthlyDataPoints.add(FlSpot(monthIndex.toDouble(), earnings));
+    });
+
+    weeklyEarnings.forEach((weekIndex, earnings) {
+      fetchedWeeklyDataPoints.add(FlSpot(weekIndex.toDouble(), earnings));
+    });
+
+    setState(() {
+      yearlyDataPoints = fetchedYearlyDataPoints;
+      monthlyDataPoints = fetchedMonthlyDataPoints;
+      weeklyDataPoints = fetchedWeeklyDataPoints;
+      eventEarnings = eventEarningsList;
+      totalEarnings = totalEarningsCalc;
+      print('Yearly Data Points updated: $yearlyDataPoints');
+      print('Monthly Data Points updated: $monthlyDataPoints');
+      print('Weekly Data Points updated: $weeklyDataPoints');
+      print('Event Earnings updated: $eventEarnings');
+      print('Total Earnings updated: $totalEarnings');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Finance Page'),
-        // backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: AspectRatio(
-          aspectRatio: 1.23,
-          child: PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _pageIndex = index;
-              });
-            },
-            children: <Widget>[
-              _buildPage('Weekly Sales',
-                  _LineChart(isShowingMainData: isShowingMainData)),
-              _buildPage('Monthly Sales',
-                  _LineChart(isShowingMainData: isShowingMainData)),
-              _buildPage('Yearly Sales',
-                  _LineChart(isShowingMainData: isShowingMainData)),
-            ],
-          ),
-        ),
-      ),
+      body: (yearlyDataPoints.isEmpty ||
+              monthlyDataPoints.isEmpty ||
+              weeklyDataPoints.isEmpty)
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: AspectRatio(
+                      aspectRatio: 1.23,
+                      child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          setState(() {
+                            _pageIndex = index;
+                          });
+                        },
+                        children: <Widget>[
+                          _buildPage(
+                              'Yearly Earning',
+                              _YearlyLineChart(
+                                  isShowingMainData: isShowingMainData,
+                                  dataPoints: yearlyDataPoints)),
+                          _buildPage(
+                              'Monthly Earning',
+                              _MonthlyLineChart(
+                                  isShowingMainData: isShowingMainData,
+                                  dataPoints: monthlyDataPoints,
+                                  months: months)),
+                          _buildPage(
+                              'Weekly Earning',
+                              _WeeklyLineChart(
+                                  isShowingMainData: isShowingMainData,
+                                  dataPoints: weeklyDataPoints,
+                                  weeks: weeks)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  _buildTotalEarnings(),
+                  _buildEventTable(),
+                ],
+              ),
+            ),
     );
   }
 
@@ -110,57 +260,132 @@ class _FinancePageState extends State<FinancePage> {
       ),
     );
   }
+
+  Widget _buildTotalEarnings() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Card(
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            'Total Earnings: \RM${totalEarnings.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEventTable() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Card(
+        elevation: 2,
+        child: DataTable(
+          columns: const [
+            DataColumn(label: Text('Event Name')),
+            DataColumn(label: Text('Earnings')),
+            DataColumn(label: Text('Start Date')),
+          ],
+          rows: eventEarnings.map((event) {
+            return DataRow(cells: [
+              DataCell(Text(event['eventName'])),
+              DataCell(Text(event['earnings'].toStringAsFixed(2))),
+              DataCell(Text(DateFormat.yMMMd().format(event['startDate']))),
+            ]);
+          }).toList(),
+        ),
+      ),
+    );
+  }
 }
 
-// ... rest of your code
-
-class _LineChart extends StatelessWidget {
-  const _LineChart({required this.isShowingMainData});
+class _YearlyLineChart extends StatelessWidget {
+  const _YearlyLineChart(
+      {required this.isShowingMainData, required this.dataPoints});
 
   final bool isShowingMainData;
+  final List<FlSpot> dataPoints;
 
   @override
   Widget build(BuildContext context) {
+    double maxY = dataPoints.isNotEmpty
+        ? dataPoints.map((e) => e.y).reduce((a, b) => a > b ? a : b)
+        : 0;
+    double minX = dataPoints.isNotEmpty
+        ? dataPoints.map((e) => e.x).reduce((a, b) => a < b ? a : b)
+        : 0;
+    double maxX = dataPoints.isNotEmpty
+        ? dataPoints.map((e) => e.x).reduce((a, b) => a > b ? a : b)
+        : 0;
+    List<int> displayedYears = _getDisplayedYears(minX.toInt(), maxX.toInt());
+
     return LineChart(
-      isShowingMainData ? sampleData1 : sampleData2,
+      isShowingMainData
+          ? getYearlyChartData(dataPoints, maxY, minX, maxX, displayedYears)
+          : getYearlyChartData(dataPoints, maxY, minX, maxX, displayedYears,
+              alternative: true),
       duration: const Duration(milliseconds: 250),
     );
   }
 
-  LineChartData get sampleData1 => LineChartData(
-        lineTouchData: lineTouchData1,
-        gridData: gridData,
-        titlesData: titlesData1,
-        borderData: borderData,
-        lineBarsData: lineBarsData1,
-        minX: 0,
-        maxX: 14,
-        maxY: 4,
-        minY: 0,
-      );
+  List<int> _getDisplayedYears(int minX, int maxX) {
+    List<int> displayedYears = [];
+    for (int i = minX; i <= maxX; i++) {
+      displayedYears.add(i);
+    }
+    return displayedYears;
+  }
 
-  LineChartData get sampleData2 => LineChartData(
-        lineTouchData: lineTouchData2,
-        gridData: gridData,
-        titlesData: titlesData2,
-        borderData: borderData,
-        lineBarsData: lineBarsData2,
-        minX: 0,
-        maxX: 14,
-        maxY: 6,
-        minY: 0,
-      );
-
-  LineTouchData get lineTouchData1 => LineTouchData(
+  LineChartData getYearlyChartData(List<FlSpot> dataPoints, double maxY,
+      double minX, double maxX, List<int> displayedYears,
+      {bool alternative = false}) {
+    return LineChartData(
+      lineTouchData: LineTouchData(
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
           getTooltipColor: (touchedSpot) => Colors.blueGrey.withOpacity(0.8),
         ),
-      );
-
-  FlTitlesData get titlesData1 => FlTitlesData(
+      ),
+      gridData: const FlGridData(show: false),
+      titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
-          sideTitles: bottomTitles,
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) {
+              final index =
+                  (value - minX).toInt(); // Adjust index to be 0-based
+              if (index < 0 || index >= displayedYears.length)
+                return const Text('');
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                space: 10,
+                child: Text(displayedYears[index].toString(),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16)),
+              );
+            },
+            reservedSize: 32,
+            interval: 1,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) {
+              return Text('${value.toInt()}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 14),
+                  textAlign: TextAlign.center);
+            },
+            reservedSize: 40,
+            interval: maxY > 0 ? maxY / 5 : 1,
+          ),
         ),
         rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
@@ -168,116 +393,8 @@ class _LineChart extends StatelessWidget {
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        leftTitles: AxisTitles(
-          sideTitles: leftTitles(),
-        ),
-      );
-
-  List<LineChartBarData> get lineBarsData1 => [
-        lineChartBarData1_1,
-        lineChartBarData1_2,
-        lineChartBarData1_3,
-      ];
-
-  LineTouchData get lineTouchData2 => const LineTouchData(
-        enabled: false,
-      );
-
-  FlTitlesData get titlesData2 => FlTitlesData(
-        bottomTitles: AxisTitles(
-          sideTitles: bottomTitles,
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: leftTitles(),
-        ),
-      );
-
-  List<LineChartBarData> get lineBarsData2 => [
-        lineChartBarData2_1,
-        lineChartBarData2_2,
-        lineChartBarData2_3,
-      ];
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '1m';
-        break;
-      case 2:
-        text = '2m';
-        break;
-      case 3:
-        text = '3m';
-        break;
-      case 4:
-        text = '5m';
-        break;
-      case 5:
-        text = '6m';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.center);
-  }
-
-  SideTitles leftTitles() => SideTitles(
-        getTitlesWidget: leftTitleWidgets,
-        showTitles: true,
-        interval: 1,
-        reservedSize: 40,
-      );
-
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('SEPT', style: style);
-        break;
-      case 7:
-        text = const Text('OCT', style: style);
-        break;
-      case 12:
-        text = const Text('DEC', style: style);
-        break;
-      default:
-        text = const Text('');
-        break;
-    }
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 10,
-      child: text,
-    );
-  }
-
-  SideTitles get bottomTitles => SideTitles(
-        showTitles: true,
-        reservedSize: 32,
-        interval: 1,
-        getTitlesWidget: bottomTitleWidgets,
-      );
-
-  FlGridData get gridData => const FlGridData(show: false);
-
-  FlBorderData get borderData => FlBorderData(
+      ),
+      borderData: FlBorderData(
         show: true,
         border: Border(
           bottom: BorderSide(color: Colors.blue.withOpacity(0.2), width: 4),
@@ -285,115 +402,264 @@ class _LineChart extends StatelessWidget {
           right: const BorderSide(color: Colors.transparent),
           top: const BorderSide(color: Colors.transparent),
         ),
-      );
+      ),
+      lineBarsData: [
+        LineChartBarData(
+          isCurved: !alternative,
+          color: alternative ? Colors.green.withOpacity(0.5) : Colors.green,
+          barWidth: alternative ? 4 : 8,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: false),
+          belowBarData: BarAreaData(show: false),
+          spots: dataPoints,
+        )
+      ],
+      minX: minX,
+      maxX: maxX, // Updated to match the displayed years length
+      maxY: maxY,
+      minY: 0,
+    );
+  }
+}
 
-  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-        isCurved: true,
-        color: Colors.green,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 1.5),
-          FlSpot(5, 1.4),
-          FlSpot(7, 3.4),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
-        ],
-      );
+class _MonthlyLineChart extends StatelessWidget {
+  const _MonthlyLineChart(
+      {required this.isShowingMainData,
+      required this.dataPoints,
+      required this.months});
 
-  LineChartBarData get lineChartBarData1_2 => LineChartBarData(
-        isCurved: true,
-        color: Colors.pink,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(
-          show: false,
-          color: Colors.pink.withOpacity(0),
+  final bool isShowingMainData;
+  final List<FlSpot> dataPoints;
+  final List<String> months;
+
+  @override
+  Widget build(BuildContext context) {
+    double maxY = dataPoints.isNotEmpty
+        ? dataPoints.map((e) => e.y).reduce((a, b) => a > b ? a : b)
+        : 0;
+    double minX = dataPoints.isNotEmpty
+        ? dataPoints.map((e) => e.x).reduce((a, b) => a < b ? a : b)
+        : 0;
+    double maxX = dataPoints.isNotEmpty
+        ? dataPoints.map((e) => e.x).reduce((a, b) => a > b ? a : b)
+        : 0;
+    List<String> displayedMonths =
+        _getDisplayedMonths(minX.toInt(), maxX.toInt());
+
+    return LineChart(
+      isShowingMainData
+          ? getMonthlyChartData(dataPoints, maxY, minX, maxX, displayedMonths)
+          : getMonthlyChartData(dataPoints, maxY, minX, maxX, displayedMonths,
+              alternative: true),
+      duration: const Duration(milliseconds: 250),
+    );
+  }
+
+  List<String> _getDisplayedMonths(int minX, int maxX) {
+    List<String> displayedMonths = [];
+    for (int i = minX; i <= maxX; i++) {
+      displayedMonths.add(months[i % 12]);
+    }
+    return displayedMonths;
+  }
+
+  LineChartData getMonthlyChartData(List<FlSpot> dataPoints, double maxY,
+      double minX, double maxX, List<String> displayedMonths,
+      {bool alternative = false}) {
+    return LineChartData(
+      lineTouchData: LineTouchData(
+        handleBuiltInTouches: true,
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipColor: (touchedSpot) => Colors.blueGrey.withOpacity(0.8),
         ),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 2.8),
-          FlSpot(7, 1.2),
-          FlSpot(10, 2.8),
-          FlSpot(12, 2.6),
-          FlSpot(13, 3.9),
-        ],
-      );
-
-  LineChartBarData get lineChartBarData1_3 => LineChartBarData(
-        isCurved: true,
-        color: Colors.cyan,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 2.8),
-          FlSpot(3, 1.9),
-          FlSpot(6, 3),
-          FlSpot(10, 1.3),
-          FlSpot(13, 2.5),
-        ],
-      );
-
-  LineChartBarData get lineChartBarData2_1 => LineChartBarData(
-        isCurved: true,
-        curveSmoothness: 0,
-        color: Colors.green.withOpacity(0.5),
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 4),
-          FlSpot(5, 1.8),
-          FlSpot(7, 5),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
-        ],
-      );
-
-  LineChartBarData get lineChartBarData2_2 => LineChartBarData(
-        isCurved: true,
-        color: Colors.pink.withOpacity(0.5),
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(
-          show: true,
-          color: Colors.pink.withOpacity(0.2),
+      ),
+      gridData: const FlGridData(show: false),
+      titlesData: FlTitlesData(
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) {
+              final index =
+                  (value - minX).toInt(); // Adjust index to be 0-based
+              if (index < 0 || index >= displayedMonths.length)
+                return const Text('');
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                space: 10,
+                child: Text(displayedMonths[index],
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16)),
+              );
+            },
+            reservedSize: 32,
+            interval: 1,
+          ),
         ),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 2.8),
-          FlSpot(7, 1.2),
-          FlSpot(10, 2.8),
-          FlSpot(12, 2.6),
-          FlSpot(13, 3.9),
-        ],
-      );
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) {
+              return Text('${value.toInt()}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 14),
+                  textAlign: TextAlign.center);
+            },
+            reservedSize: 40,
+            interval: maxY > 0 ? maxY / 5 : 1,
+          ),
+        ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border(
+          bottom: BorderSide(color: Colors.blue.withOpacity(0.2), width: 4),
+          left: const BorderSide(color: Colors.transparent),
+          right: const BorderSide(color: Colors.transparent),
+          top: const BorderSide(color: Colors.transparent),
+        ),
+      ),
+      lineBarsData: [
+        LineChartBarData(
+          isCurved: !alternative,
+          color: alternative ? Colors.green.withOpacity(0.5) : Colors.green,
+          barWidth: alternative ? 4 : 8,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: false),
+          belowBarData: BarAreaData(show: false),
+          spots: dataPoints,
+        )
+      ],
+      minX: minX,
+      maxX: maxX, // Updated to match the displayed months length
+      maxY: maxY,
+      minY: 0,
+    );
+  }
+}
 
-  LineChartBarData get lineChartBarData2_3 => LineChartBarData(
-        isCurved: true,
-        curveSmoothness: 0,
-        color: Colors.cyan.withOpacity(0.5),
-        barWidth: 2,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: true),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 3.8),
-          FlSpot(3, 1.9),
-          FlSpot(6, 5),
-          FlSpot(10, 3.3),
-          FlSpot(13, 4.5),
-        ],
-      );
+class _WeeklyLineChart extends StatelessWidget {
+  const _WeeklyLineChart(
+      {required this.isShowingMainData,
+      required this.dataPoints,
+      required this.weeks});
+
+  final bool isShowingMainData;
+  final List<FlSpot> dataPoints;
+  final List<String> weeks;
+
+  @override
+  Widget build(BuildContext context) {
+    double maxY = dataPoints.isNotEmpty
+        ? dataPoints.map((e) => e.y).reduce((a, b) => a > b ? a : b)
+        : 0;
+    double minX = dataPoints.isNotEmpty
+        ? dataPoints.map((e) => e.x).reduce((a, b) => a < b ? a : b)
+        : 0;
+    double maxX = dataPoints.isNotEmpty
+        ? dataPoints.map((e) => e.x).reduce((a, b) => a > b ? a : b)
+        : 0;
+    List<String> displayedWeeks =
+        _getDisplayedWeeks(minX.toInt(), maxX.toInt());
+
+    return LineChart(
+      isShowingMainData
+          ? getWeeklyChartData(dataPoints, maxY, minX, maxX, displayedWeeks)
+          : getWeeklyChartData(dataPoints, maxY, minX, maxX, displayedWeeks,
+              alternative: true),
+      duration: const Duration(milliseconds: 250),
+    );
+  }
+
+  List<String> _getDisplayedWeeks(int minX, int maxX) {
+    List<String> displayedWeeks = [];
+    for (int i = minX; i <= maxX; i++) {
+      displayedWeeks.add(weeks[i % 5]);
+    }
+    return displayedWeeks;
+  }
+
+  LineChartData getWeeklyChartData(List<FlSpot> dataPoints, double maxY,
+      double minX, double maxX, List<String> displayedWeeks,
+      {bool alternative = false}) {
+    return LineChartData(
+      lineTouchData: LineTouchData(
+        handleBuiltInTouches: true,
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipColor: (touchedSpot) => Colors.blueGrey.withOpacity(0.8),
+        ),
+      ),
+      gridData: const FlGridData(show: false),
+      titlesData: FlTitlesData(
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) {
+              final index =
+                  (value - minX).toInt(); // Adjust index to be 0-based
+              if (index < 0 || index >= displayedWeeks.length)
+                return const Text('');
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                space: 10,
+                child: Text(displayedWeeks[index],
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16)),
+              );
+            },
+            reservedSize: 32,
+            interval: 1,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: (value, meta) {
+              return Text('${value.toInt()}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 14),
+                  textAlign: TextAlign.center);
+            },
+            reservedSize: 40,
+            interval: maxY > 0 ? maxY / 5 : 1,
+          ),
+        ),
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border(
+          bottom: BorderSide(color: Colors.blue.withOpacity(0.2), width: 4),
+          left: const BorderSide(color: Colors.transparent),
+          right: const BorderSide(color: Colors.transparent),
+          top: const BorderSide(color: Colors.transparent),
+        ),
+      ),
+      lineBarsData: [
+        LineChartBarData(
+          isCurved: !alternative,
+          color: alternative ? Colors.green.withOpacity(0.5) : Colors.green,
+          barWidth: alternative ? 4 : 8,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: false),
+          belowBarData: BarAreaData(show: false),
+          spots: dataPoints,
+        )
+      ],
+      minX: minX,
+      maxX: maxX, // Updated to match the displayed weeks length
+      maxY: maxY,
+      minY: 0,
+    );
+  }
 }
