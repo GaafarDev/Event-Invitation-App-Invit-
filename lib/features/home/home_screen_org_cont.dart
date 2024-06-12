@@ -1,11 +1,160 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
+import 'package:invit/features/auth/login_screen.dart';
+import 'package:invit/features/events/create_event_screen.dart';
 import 'package:invit/features/events/view_event_details.dart';
-import 'package:invit/features/subscription/getSubscription.dart';
+import 'package:invit/features/events/view_org_event.dart';
+import 'package:invit/features/finance/finance_screen.dart';
+import 'package:invit/features/map/map_screen.dart';
+import 'package:invit/shared/components/custom-drawer.dart';
+import 'package:invit/shared/components/custom_navigationbar_org.dart';
 import 'package:invit/shared/constants/assets_strings.dart';
 import 'package:invit/shared/constants/colors.dart';
+
+class HomePageOrg extends StatefulWidget {
+  const HomePageOrg({Key? key, required bool isOrganizerView})
+      : super(key: key);
+  final bool isOrganizerView = true;
+  @override
+  State<HomePageOrg> createState() => _HomePageOrgState();
+}
+
+class _HomePageOrgState extends State<HomePageOrg> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  int _currentIndex = 0;
+  String searchString = '';
+  final List<Widget> _children = [
+    HomePageOrgContent(), // Replace with your actual saved screen widget
+    ViewOrgEvent(),
+    MapPage(), // Replace with your actual saved screen widget
+    FinancePage(),
+  ];
+
+  void _signOut() async {
+    try {
+      await _auth.signOut();
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Successfully signed out'),
+          ),
+        );
+      });
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
+    } catch (e) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to sign out'),
+          ),
+        );
+      });
+    }
+  }
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(65.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(18),
+            bottomRight: Radius.circular(18),
+          ),
+          child: AppBar(
+            iconTheme: IconThemeData(color: Colors.white),
+            title: Text(
+              'Invit Organizer View',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            backgroundColor: button1,
+            flexibleSpace: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.only(left: 150.0, top: 10.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: <Widget>[
+                            Center(
+                                // child: Text(
+                                //   'Invit Organizer View',
+                                //   style: TextStyle(
+                                //       color: Colors.white, fontSize: 20),
+                                // ),
+                                ),
+                          ],
+                        ),
+                        SizedBox(width: 10.0),
+                        TextButton(
+                          style: TextButton.styleFrom(),
+                          onPressed: _signOut,
+                          child: Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                            size: 30.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      drawer: CustomDrawer(isOrganizerView: widget.isOrganizerView),
+      body: Column(
+        children: [
+          Expanded(child: _children[_currentIndex]),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePageOrg(
+                      isOrganizerView: true,
+                    )),
+            (Route<dynamic> route) => false,
+          );
+          Future.delayed(Duration.zero, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateEventScreen()),
+            );
+          });
+        },
+        child: const Icon(Icons.add),
+      ),
+      backgroundColor: Colors.white,
+      bottomNavigationBar: CustomNavigationBarOrg(
+        onTap: onTabTapped,
+      ),
+    );
+  }
+}
 
 class HomePageOrgContent extends StatelessWidget {
   final User? user = FirebaseAuth.instance.currentUser;
@@ -62,9 +211,9 @@ class HomePageOrgContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  EarningsCard(), // Add the EarningsCard here
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                    padding: EdgeInsets.only(left: 20, top: 20, bottom: 20),
                     child: Text(
                       'Upcoming Event',
                       style: TextStyle(
@@ -193,56 +342,99 @@ class HomePageOrgContent extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 30),
-                  // Padding(
-                  //   padding: EdgeInsets.all(10),
-                  //   child: Container(
-                  //     width: double.infinity,
-                  //     height: 130,
-                  //     decoration: BoxDecoration(
-                  //       color: button5,
-                  //       borderRadius: BorderRadius.circular(10),
-                  //     ),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //       children: [
-                  //         Column(
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             SizedBox(height: 10),
-                  //             Text('Get Your Subscription Today!',
-                  //                 style: TextStyle(
-                  //                     fontSize: 20,
-                  //                     fontWeight: FontWeight.bold)),
-                  //             Text('Create Your Own Event!'),
-                  //             SizedBox(height: 10),
-                  //             ElevatedButton(
-                  //               onPressed: () {
-                  //                 Navigator.push(
-                  //                   context,
-                  //                   MaterialPageRoute(
-                  //                       builder: (context) =>
-                  //                           GetSubscription()),
-                  //                 );
-                  //               },
-                  //               child: Text('Subscribe'),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         Icon(
-                  //           Icons.event_available,
-                  //           size: 70,
-                  //           color: Colors.white,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
           );
         }
       },
+    );
+  }
+}
+
+class EarningsCard extends StatefulWidget {
+  @override
+  _EarningsCardState createState() => _EarningsCardState();
+}
+
+class _EarningsCardState extends State<EarningsCard> {
+  late String _currentTime;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentTime = _formatDateTime(DateTime.now());
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _currentTime = _formatDateTime(DateTime.now());
+      });
+    });
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('dd MMM yyyy, HH:mm').format(dateTime);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        color: button1,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10.0,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Total Earning',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16.0,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              'RM100.00', // This will be dynamically updated from Firebase
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 32.0,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              'Updated on $_currentTime',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w400,
+                fontSize: 14.0,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

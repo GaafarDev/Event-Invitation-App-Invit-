@@ -19,7 +19,7 @@ class _MapPageState extends State<MapPage> {
 
   late GoogleMapController _mapController;
   TextEditingController _searchController = TextEditingController();
-  final String _apiKey = 'YOUR_GOOGLE_API_KEY';
+  final String _apiKey = 'AIzaSyCLwwftYIJ2lIkQnglwj6Mi0KDqUM5eUjc';
   Set<Marker> _markers = {};
 
   @override
