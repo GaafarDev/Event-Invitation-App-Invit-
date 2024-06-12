@@ -13,6 +13,7 @@ import 'package:invit/features/home/home_screen_cont.dart';
 import 'package:invit/features/home/home_screen_org.dart';
 import 'package:invit/features/home/home_screen_org_cont.dart';
 import 'package:invit/features/invitations/view_invitations.dart';
+import 'package:invit/features/map/map_screen.dart';
 import 'package:invit/features/profile/profile_screen.dart';
 import 'package:invit/features/services/all-events-search-service.dart';
 import 'package:invit/shared/components/custom-drawer.dart';
@@ -37,7 +38,7 @@ class _HomePageOrgState extends State<HomePageOrg> {
   final List<Widget> _children = [
     HomePageOrgContent(), // Replace with your actual saved screen widget
     ViewOrgEvent(),
-    Text('Map'), // Replace with your actual saved screen widget
+    MapPage(), // Replace with your actual saved screen widget
     FinancePage(),
   ];
 

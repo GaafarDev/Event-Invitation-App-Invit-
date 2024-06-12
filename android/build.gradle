@@ -18,6 +18,6 @@ tasks.register("clean", Delete) {
 }
 
 buildscript {
-   ext.kotlin_version = '2.0.0' // Replace <latest-version> with the actual latest version
+   ext.kotlin_version = '1.9.24' // Replace <latest-version> with the actual latest version
     
 }
