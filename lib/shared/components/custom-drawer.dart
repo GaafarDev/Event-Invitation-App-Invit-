@@ -62,6 +62,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       DateTime subDateEnd = userDoc['subDateEnd'].toDate();
 
       if (subDateEnd.isBefore(DateTime.now())) {
+        Navigator.pop(context);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => GetSubscription()),
