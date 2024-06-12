@@ -119,6 +119,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             leading: Icon(Icons.account_circle),
             title: Text('Profile'),
             onTap: () {
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ProfileScreen()),
@@ -129,6 +130,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             leading: Icon(Icons.subscriptions),
             title: Text('Subscription'),
             onTap: () {
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => GetSubscription()),
