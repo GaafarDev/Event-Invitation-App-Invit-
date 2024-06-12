@@ -72,8 +72,8 @@ class _HomePageOrgState extends State<HomePageOrg> {
         preferredSize: Size.fromHeight(65.0),
         child: ClipRRect(
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(18),
-            bottomRight: Radius.circular(18),
+            bottomLeft: Radius.circular(0),
+            bottomRight: Radius.circular(0),
           ),
           child: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
@@ -427,7 +427,6 @@ class _EarningsCardState extends State<EarningsCard> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
         color: button1,
         boxShadow: [
           BoxShadow(
