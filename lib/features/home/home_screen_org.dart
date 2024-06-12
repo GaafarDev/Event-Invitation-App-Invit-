@@ -80,10 +80,12 @@ class _HomePageOrgState extends State<HomePageOrg> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(65.0),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(18),
-            bottomRight: Radius.circular(18),
-          ),
+          borderRadius: _currentIndex != 0
+              ? BorderRadius.only(
+                  bottomLeft: Radius.circular(18),
+                  bottomRight: Radius.circular(18),
+                )
+              : BorderRadius.circular(0),
           child: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
             title: Text(
