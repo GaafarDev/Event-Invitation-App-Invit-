@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:invit/features/events/view_event_details.dart';
 
 class EventSearchPage extends StatefulWidget {
@@ -25,50 +26,91 @@ class _EventSearchPageState extends State<EventSearchPage> {
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search by name',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: _showSearchPopup,
-                ),
+                hintText: "Enter event's name or description here",
+                //Got error with the _applyFilter function, so omitted it for now
+                // suffixIcon: IconButton(
+                //   icon: Icon(Icons.search),
+                //   onPressed: _showSearchPopup,
+                // ),
               ),
               onChanged: _updateSuggestions,
             ),
             if (_suggestions.isNotEmpty)
-              ListView.builder(
+              Expanded(
+                  child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: _suggestions.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                      title: Text(_suggestions[index]),
-                      onTap: () async {
-                        QuerySnapshot eventQuery = await FirebaseFirestore
-                            .instance
-                            .collection('events')
-                            .where('name', isEqualTo: _suggestions[index])
-                            .get();
+                  return FutureBuilder<QuerySnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('events')
+                        .where('name', isEqualTo: _suggestions[index])
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                        DocumentSnapshot eventDoc = snapshot.data!.docs.first;
+                        Map<String, dynamic> eventData =
+                            eventDoc.data() as Map<String, dynamic>;
+                        eventData['id'] =
+                            eventDoc.id; // Add the document id to eventData
 
-                        if (eventQuery.docs.isNotEmpty) {
-                          DocumentSnapshot eventDoc = eventQuery.docs.first;
-                          Map<String, dynamic> eventData =
-                              eventDoc.data() as Map<String, dynamic>;
-                          eventData['id'] =
-                              eventDoc.id; // Add the document id to eventData
+                        String name = eventData['name'] ?? '';
+                        String description = eventData['description'] ?? '';
+                        String venue = eventData['venue'] ?? '';
+                        Timestamp? startTimestamp = eventData['start_date'];
+                        DateTime? startDate = startTimestamp?.toDate();
+                        Timestamp? endTimestamp = eventData['end_date'];
+                        DateTime? endDate = endTimestamp?.toDate();
+                        double? ticketPrice =
+                            (eventData['ticket_price'] as num).toDouble();
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EventDetailsScreen(
-                                eventData: eventData,
+                        return ListTile(
+                          title: Text(
+                            name,
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Description: ' + description),
+                              Text('Venue: ' + venue),
+                              if (startDate != null && endDate != null)
+                                Text('Date: ' +
+                                    DateFormat('d MMMM yyyy')
+                                        .format(startDate) +
+                                    ' - ' +
+                                    DateFormat('d MMMM yyyy').format(endDate) +
+                                    ', ' +
+                                    DateFormat('h:mm a').format(startDate) +
+                                    ' - ' +
+                                    DateFormat('h:mm a').format(endDate)),
+                              if (ticketPrice != null)
+                                Text('Ticket Price: RM' +
+                                    ticketPrice.toString()),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EventDetailsScreen(
+                                  eventData: eventData,
+                                ),
                               ),
-                            ),
-                          );
-                        } else {
-                          // Handle the situation where no event with the given name was found
-                          // For example, show a dialog or a snackbar
-                        }
-                      });
+                            );
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        // While the data is loading, show a loading spinner
+                        return CircularProgressIndicator();
+                      }
+                    },
+                  );
                 },
-              )
+              ))
             // Add other filters (date range, event type) here
             // Display search results here
           ],
@@ -84,7 +126,11 @@ class _EventSearchPageState extends State<EventSearchPage> {
       });
       return;
     }
-    FirebaseFirestore.instance.collection('events').get().then((snapshot) {
+    FirebaseFirestore.instance
+        .collection('events')
+        .where('type', isEqualTo: 'public')
+        .get()
+        .then((snapshot) {
       List<String> suggestions = snapshot.docs
           .map((doc) {
             String name = doc.data()['name'] as String;
@@ -205,21 +251,47 @@ class _EventSearchPageState extends State<EventSearchPage> {
 // Define Event class
 class Event {
   String? name;
-  String? type;
-  DateTime? date;
+  String? description;
+  DateTime? startDate;
+  DateTime? endDate;
+  String? venue;
+  double? ticketPrice;
 
-  Event({this.name, this.type, this.date});
+  Event({
+    this.name,
+    this.description,
+    this.startDate,
+    this.endDate,
+    this.venue,
+    this.ticketPrice,
+  });
 
   static Event? fromDocument(DocumentSnapshot doc) {
     var data = doc.data() as Map<String, dynamic>?;
     if (data != null) {
       String? name = data['name'];
-      String? type = data['type'];
-      Timestamp? timestamp = data['date'];
-      DateTime? date = timestamp?.toDate();
+      String? description = data['description'];
+      Timestamp? startTimestamp = data['start_date'];
+      DateTime? startDate = startTimestamp?.toDate();
+      Timestamp? endTimestamp = data['end_date'];
+      DateTime? endDate = endTimestamp?.toDate();
+      String? venue = data['venue'];
+      double? ticketPrice = data['ticket_price'];
 
-      if (name != null && type != null && date != null) {
-        return Event(name: name, type: type, date: date);
+      if (name != null &&
+          description != null &&
+          startDate != null &&
+          endDate != null &&
+          venue != null &&
+          ticketPrice != null) {
+        return Event(
+          name: name,
+          description: description,
+          startDate: startDate,
+          endDate: endDate,
+          venue: venue,
+          ticketPrice: ticketPrice,
+        );
       }
     }
     return null;

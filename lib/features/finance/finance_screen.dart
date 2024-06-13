@@ -293,18 +293,18 @@ class _FinancePageState extends State<FinancePage> {
           child: DataTable(
             columns: const [
               DataColumn(label: Text('Event Name')),
-              // DataColumn(label: Text('Start Date')),
               DataColumn(label: Text('Earnings')),
               DataColumn(label: Text('Ticket Price')),
               DataColumn(label: Text('Participants')),
+              DataColumn(label: Text('Start Date')),
             ],
             rows: eventEarnings.map((event) {
               return DataRow(cells: [
                 DataCell(Text(event['eventName'])),
-                // DataCell(Text(DateFormat.yMMMd().format(event['startDate']))),
                 DataCell(Text(event['earnings'].toStringAsFixed(2))),
                 DataCell(Text(event['ticketPrice'].toStringAsFixed(2))),
                 DataCell(Text(event['participants'].toStringAsFixed(0))),
+                DataCell(Text(DateFormat.yMMMd().format(event['startDate']))),
               ]);
             }).toList(),
           ),
