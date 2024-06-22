@@ -17,6 +17,9 @@ class EventDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isEventCreator =
+        eventData['user_id'] == FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -104,6 +107,42 @@ class EventDetailsScreen extends StatelessWidget {
               desc: eventData['description'] ??
                   'No Description', // Use default value if null
             ),
+            SizedBox(height: 30),
+            // Participants List
+            if (isEventCreator)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Participant List',
+                      style: TextStyle(
+                        fontSize:
+                            heading2FontSize, // Matched to "About Event" heading size
+                        fontWeight: FontWeight
+                            .w400, // Matched to "About Event" font weight
+                      ),
+                    ),
+                  ),
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: getParticipants(eventData['id']),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.hasData &&
+                          snapshot.data!.isNotEmpty) {
+                        return ParticipantListTable(
+                            participants: snapshot.data!);
+                      } else {
+                        return Text('No participants yet');
+                      }
+                    },
+                  ),
+                ],
+              ),
             SizedBox(height: 100),
             PurchaseTicketButton(
               eventId: eventData['id'] ??
@@ -154,6 +193,67 @@ class EventTitle extends StatelessWidget {
         style: TextStyle(
           fontSize: heading1FontSize,
           fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+}
+
+Future<List<Map<String, dynamic>>> getParticipants(String eventId) async {
+  List<Map<String, dynamic>> participantsList = [];
+
+  QuerySnapshot participantsSnapshot = await FirebaseFirestore.instance
+      .collection('participants')
+      .where('eventId', isEqualTo: eventId)
+      .get();
+
+  for (var doc in participantsSnapshot.docs) {
+    String userId = doc['userId'];
+    DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    if (userSnapshot.exists) {
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+      participantsList.add({
+        'fullName': userData['fullName'],
+        'phoneNo': userData['phoneNo'],
+        // 'email': userData['email'],
+      });
+    }
+  }
+
+  return participantsList;
+}
+
+class ParticipantListTable extends StatelessWidget {
+  final List<Map<String, dynamic>> participants;
+
+  ParticipantListTable({required this.participants});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columns: [
+            DataColumn(label: Text('Full Name')),
+            DataColumn(label: Text('Phone No')),
+            // DataColumn(label: Text('Email')),
+          ],
+          rows: participants
+              .map(
+                (participant) => DataRow(
+                  cells: [
+                    DataCell(Text(participant['fullName'] ?? '')),
+                    DataCell(Text(participant['phoneNo'] ?? '')),
+                    // DataCell(Text(participant['email'] ?? '')),
+                  ],
+                ),
+              )
+              .toList(),
         ),
       ),
     );
