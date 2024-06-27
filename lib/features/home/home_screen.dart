@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Successfully signed out'),
+            content: Text('Successfully signed out '),
           ),
         );
       });
